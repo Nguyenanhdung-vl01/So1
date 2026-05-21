@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bài tập - Physics Lab</title>
+
+    <!-- Font Awesome & Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ==========================================
+           CSS: DARK THEME & ANIMATIONS
+        ========================================== */
+      :root {
+        --bg-primary: #070a12;
+        --bg-secondary: #0f1523;
+        --bg-card: rgba(20, 28, 45, 0.65);
+        --text-main: #e2e8f0;
+        --text-muted: #94a3b8;
+        --accent: #3b82f6;
+        --accent-hover: #60a5fa;
+        --border: rgba(255, 255, 255, 0.08);
+        --glass: rgba(255, 255, 255, 0.04);
+        --radius: 16px;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: var(--bg-primary);
+        color: var(--text-main);
+        font-family: "Inter", system-ui, sans-serif;
+        line-height: 1.6;
+        overflow-x: hidden;
+        background-image:
+          radial-gradient(
+            circle at 15% 25%,
+            rgba(59, 130, 246, 0.15) 0%,
+            transparent 45%
+          ),
+          radial-gradient(
+            circle at 85% 75%,
+            rgba(139, 92, 246, 0.12) 0%,
+            transparent 45%
+          );
+        background-attachment: fixed;
+      }
+
+      /* Animated Background Mesh */
+      body::before {
+        content: "";
+        position: fixed;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: conic-gradient(
+          from 0deg at 50% 50%,
+          transparent 0deg,
+          rgba(59, 130, 246, 0.05) 60deg,
+          transparent 120deg,
+          rgba(139, 92, 246, 0.05) 180deg,
+          transparent 240deg,
+          rgba(236, 72, 153, 0.05) 300deg,
+          transparent 360deg
+        );
+        animation: rotateBg 30s linear infinite;
+        z-index: -1;
+        pointer-events: none;
+      }
+      @keyframes rotateBg {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Page Transition Overlay */
+      .page-transition {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--bg-primary);
+        z-index: 9999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s var(--transition);
+      }
+      .page-transition.active {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* Navigation */
+      .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 1000;
+        padding: 1rem 0;
+        background: var(--glass);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-container {
+        max-width: 1100px;
+        margin: auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 1.5rem;
+      }
+      .logo {
+        font-size: 1.4rem;
+        font-weight: 700;
+        text-decoration: none;
+        background: linear-gradient(90deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .nav-links {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+      }
+      .nav-links a {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 0.5rem 0.9rem;
+        border-radius: 8px;
+        transition: var(--transition);
+      }
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: var(--text-main);
+        background: rgba(255, 255, 255, 0.07);
+      }
+
+      /* Main Content */
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+      }
+
+      .hero {
+        padding: 8rem 1.5rem 3rem;
+        text-align: center;
+      }
+      .hero h1 {
+        font-size: clamp(1.8rem, 4vw, 2.8rem);
+        font-weight: 800;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #fff 30%, #60a5fa 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .hero p {
+        color: var(--text-muted);
+        max-width: 600px;
+        margin: 0 auto 2rem;
+        font-size: 1.05rem;
+      }
+
+      .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 4rem;
+      }
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 2rem;
+        text-decoration: none;
+        color: var(--text-main);
+        backdrop-filter: blur(10px);
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+      }
+      .card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background: linear-gradient(90deg, var(--accent), #a78bfa, #ec4899);
+        opacity: 0;
+        transition: var(--transition);
+      }
+      .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.15);
+      }
+      .card:hover::before {
+        opacity: 1;
+      }
+      .card-icon {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+        background: linear-gradient(135deg, #60a5fa, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .card h3 {
+        margin: 0.5rem 0;
+        font-size: 1.2rem;
+      }
+      .card p {
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        margin: 0;
+      }
+
+      footer {
+        text-align: center;
+        padding: 2rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+
+      /* Fade In Animation */
+      .fade-in {
+        opacity: 0;
+        transform: translateY(15px);
+        transition:
+          opacity 0.5s var(--transition),
+          transform 0.5s var(--transition);
+      }
+      .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          padding: 7rem 1rem 2.5rem;
+        }
+        .nav-links {
+          display: none;
+        } /* Simplified for mobile demo */
+        .card-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-transition"></div>
+
+    <nav class="navbar">
+      <div class="nav-container">
+        <a href="index.html" class="logo"
+          ><i class="fa-solid fa-atom me-1"></i> Physics Lab</a
+        >
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"
+              ><i class="fa-solid fa-house me-1"></i>Trang chủ</a
+            >
+          </li>
+          <li>
+            <a href="Kienthuc.html"
+              ><i class="fa-solid fa-book-open me-1"></i>Kiến thức</a
+            >
+          </li>
+          <li>
+            <a href="Baitap.html" class="active"
+              ><i class="fa-solid fa-pen-to-square me-1"></i>Bài tập</a
+            >
+          </li>
+          <li>
+            <a href="Mophong.html"
+              ><i class="fa-solid fa-microchip me-1"></i>Mô phỏng</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <header class="hero">
+      <div class="container">
+        <h1><i class="fa-solid fa-pen-nib me-2"></i>Bài tập Vật lý</h1>
+        <p>
+          Nơi bạn sẽ tự làm các bài tập, câu hỏi và lời giải... Kiên trì là một
+          bài học quý giá. ⚔️
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <div class="card-grid">
+        <a href="#" class="card fade-in">
+          <div class="card-icon"><i class="fa-solid fa-list-check"></i></div>
+          <h3>Trắc nghiệm nhanh</h3>
+          <p>500+ câu hỏi bám sát chương trình Trung học & Đại học.</p>
+        </a>
+        <a href="#" class="card fade-in">
+          <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
+          <h3>Tự luận nâng cao</h3>
+          <p>Bài tập định lượng, phân tích đa bước, lời giải chi tiết.</p>
+        </a>
+        <a href="#" class="card fade-in">
+          <div class="card-icon"><i class="fa-solid fa-trophy"></i></div>
+          <h3>Đề thi thử</h3>
+          <p>Mô phỏng áp lực phòng thi, chấm điểm tự động.</p>
+        </a>
+        <a href="#" class="card fade-in">
+          <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
+          <h3>Theo dõi tiến độ</h3>
+          <p>Biểu đồ thống kê điểm mạnh/yếu & lộ trình ôn tập.</p>
+        </a>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Physics Lab | Tự học & Tiến bộ</p>
+    </footer>
+
+    <script>
+      // Page Transition Logic
+      const transitionOverlay = document.querySelector(".page-transition");
+      document.querySelectorAll('a[href$=".html"]').forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          transitionOverlay.classList.add("active");
+          setTimeout(() => (window.location.href = link.href), 350);
+        });
+      });
+
+      // Fade In on Scroll
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) entry.target.classList.add("visible");
+          });
+        },
+        { threshold: 0.15 },
+      );
+      document
+        .querySelectorAll(".fade-in")
+        .forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>
