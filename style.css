@@ -644,3 +644,16 @@ footer a:hover {
     grid-template-columns: 1fr;
   }
 }
+/* MOBILE FIX - chỉ thêm, không sửa gì khác */
+@media (max-width: 768px) {
+  .hero h1,
+  .hero p,
+  .card h3,
+  .card p {
+    word-break: break-word;
+  }
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
