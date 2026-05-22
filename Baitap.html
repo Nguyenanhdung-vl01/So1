@@ -3,366 +3,1216 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bài tập - Physics Lab</title>
-
-    <!-- Font Awesome & Google Fonts -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
+    <title>🎯 Bài Tập | Physics Lab</title>
+    <link rel="stylesheet" href="style.css" />
     <style>
-      /* ==========================================
-           CSS: DARK THEME & ANIMATIONS
-        ========================================== */
-      :root {
-        --bg-primary: #070a12;
-        --bg-secondary: #0f1523;
-        --bg-card: rgba(20, 28, 45, 0.65);
-        --text-main: #e2e8f0;
-        --text-muted: #94a3b8;
-        --accent: #3b82f6;
-        --accent-hover: #60a5fa;
-        --border: rgba(255, 255, 255, 0.08);
-        --glass: rgba(255, 255, 255, 0.04);
-        --radius: 16px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      /* === BAITAP SPECIFIC STYLES === */
+      .quiz-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .topic-grid {
+        display: grid;
+        gap: 1.2rem;
+        margin-top: 1rem;
+      }
+      .grade-title {
+        font-size: 1.4rem;
+        margin: 1.8rem 0 0.8rem;
+        padding-left: 1rem;
+        border-left: 4px solid var(--primary);
+      }
+      .topic-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.2rem;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .topic-card:hover {
+        background: var(--surface-hover);
+        transform: translateX(6px);
+        border-color: var(--primary);
+      }
+      .topic-info h3 {
+        margin-bottom: 0.3rem;
+        font-size: 1.05rem;
+      }
+      .topic-info p {
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+      .badge {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--primary);
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
       }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      .quiz-box {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-top: 1rem;
+      }
+      .progress-bar {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        width: 0%;
+        transition: 0.4s;
+      }
+      .question-text {
+        font-size: 1.15rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
       }
 
-      body {
-        background: var(--bg-primary);
-        color: var(--text-main);
-        font-family: "Inter", system-ui, sans-serif;
-        line-height: 1.6;
-        overflow-x: hidden;
-        background-image:
-          radial-gradient(
-            circle at 15% 25%,
-            rgba(59, 130, 246, 0.15) 0%,
-            transparent 45%
-          ),
-          radial-gradient(
-            circle at 85% 75%,
-            rgba(139, 92, 246, 0.12) 0%,
-            transparent 45%
-          );
-        background-attachment: fixed;
+      .options {
+        display: grid;
+        gap: 0.8rem;
       }
-
-      /* Animated Background Mesh */
-      body::before {
-        content: "";
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-          from 0deg at 50% 50%,
-          transparent 0deg,
-          rgba(59, 130, 246, 0.05) 60deg,
-          transparent 120deg,
-          rgba(139, 92, 246, 0.05) 180deg,
-          transparent 240deg,
-          rgba(236, 72, 153, 0.05) 300deg,
-          transparent 360deg
-        );
-        animation: rotateBg 30s linear infinite;
-        z-index: -1;
+      .opt {
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        background: var(--surface);
+        position: relative;
+        overflow: hidden;
+      }
+      .opt:hover:not(.disabled) {
+        background: var(--surface-hover);
+        transform: translateX(5px);
+      }
+      .opt.correct {
+        background: rgba(16, 185, 129, 0.2);
+        border-color: var(--success);
+        color: #fff;
+      }
+      .opt.wrong {
+        background: rgba(239, 68, 68, 0.2);
+        border-color: #ef4444;
+        color: #fff;
+      }
+      .opt.disabled {
         pointer-events: none;
-      }
-      @keyframes rotateBg {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
+        opacity: 0.8;
       }
 
-      /* Page Transition Overlay */
-      .page-transition {
+      .explanation {
+        margin-top: 1rem;
+        padding: 0.8rem;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: var(--muted);
+        display: none;
+        border-left: 3px solid var(--secondary);
+      }
+      .explanation.show {
+        display: block;
+        animation: fadeUp 0.3s ease;
+      }
+
+      .nav-btns {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+      }
+      .btn-quiz {
+        padding: 0.7rem 1.5rem;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: 600;
+      }
+      .btn-quiz:hover:not(:disabled) {
+        background: var(--surface-hover);
+      }
+      .btn-quiz:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      .btn-quiz.primary {
+        background: var(--primary);
+        border-color: transparent;
+        color: #fff;
+      }
+      .btn-quiz.primary:hover:not(:disabled) {
+        background: var(--secondary);
+      }
+
+      .result-box {
+        text-align: center;
+        padding: 3rem 2rem;
+      }
+      .score-circle {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: var(--surface);
+        border: 4px solid var(--primary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2.5rem;
+        font-weight: 800;
+      }
+      .confetti-canvas {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background: var(--bg-primary);
-        z-index: 9999;
-        opacity: 0;
         pointer-events: none;
-        transition: opacity 0.35s var(--transition);
-      }
-      .page-transition.active {
-        opacity: 1;
-        pointer-events: all;
-      }
-
-      /* Navigation */
-      .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 1rem 0;
-        background: var(--glass);
-        backdrop-filter: blur(14px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav-container {
-        max-width: 1100px;
-        margin: auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 1.5rem;
-      }
-      .logo {
-        font-size: 1.4rem;
-        font-weight: 700;
-        text-decoration: none;
-        background: linear-gradient(90deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .nav-links {
-        display: flex;
-        gap: 1rem;
-        list-style: none;
-      }
-      .nav-links a {
-        color: var(--text-muted);
-        text-decoration: none;
-        padding: 0.5rem 0.9rem;
-        border-radius: 8px;
-        transition: var(--transition);
-      }
-      .nav-links a:hover,
-      .nav-links a.active {
-        color: var(--text-main);
-        background: rgba(255, 255, 255, 0.07);
-      }
-
-      /* Main Content */
-      .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-      }
-
-      .hero {
-        padding: 8rem 1.5rem 3rem;
-        text-align: center;
-      }
-      .hero h1 {
-        font-size: clamp(1.8rem, 4vw, 2.8rem);
-        font-weight: 800;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #fff 30%, #60a5fa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .hero p {
-        color: var(--text-muted);
-        max-width: 600px;
-        margin: 0 auto 2rem;
-        font-size: 1.05rem;
-      }
-
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 4rem;
-      }
-      .card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 2rem;
-        text-decoration: none;
-        color: var(--text-main);
-        backdrop-filter: blur(10px);
-        position: relative;
-        overflow: hidden;
-        transition: var(--transition);
-      }
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, var(--accent), #a78bfa, #ec4899);
-        opacity: 0;
-        transition: var(--transition);
-      }
-      .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.15);
-      }
-      .card:hover::before {
-        opacity: 1;
-      }
-      .card-icon {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-        background: linear-gradient(135deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .card h3 {
-        margin: 0.5rem 0;
-        font-size: 1.2rem;
-      }
-      .card p {
-        color: var(--text-muted);
-        font-size: 0.92rem;
-        margin: 0;
-      }
-
-      footer {
-        text-align: center;
-        padding: 2rem;
-        border-top: 1px solid var(--border);
-        color: var(--text-muted);
-        font-size: 0.9rem;
-      }
-
-      /* Fade In Animation */
-      .fade-in {
-        opacity: 0;
-        transform: translateY(15px);
-        transition:
-          opacity 0.5s var(--transition),
-          transform 0.5s var(--transition);
-      }
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
+        z-index: 999;
       }
 
       @media (max-width: 768px) {
-        .hero {
-          padding: 7rem 1rem 2.5rem;
-        }
-        .nav-links {
-          display: none;
-        } /* Simplified for mobile demo */
-        .card-grid {
+        .topic-grid {
           grid-template-columns: 1fr;
+        }
+        .quiz-box {
+          padding: 1.5rem;
         }
       }
     </style>
   </head>
   <body>
-    <div class="page-transition"></div>
+    <div id="loader"><div class="spinner"></div></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <canvas id="particles"></canvas>
 
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="index.html" class="logo"
-          ><i class="fa-solid fa-atom me-1"></i> Physics Lab</a
-        >
+    <nav id="navbar">
+      <div class="nav-wrap">
+        <a href="index.html" class="logo">⚛️ <span>Physics Lab</span></a>
         <ul class="nav-links">
-          <li>
-            <a href="index.html"
-              ><i class="fa-solid fa-house me-1"></i>Trang chủ</a
-            >
-          </li>
-          <li>
-            <a href="Kienthuc.html"
-              ><i class="fa-solid fa-book-open me-1"></i>Kiến thức</a
-            >
-          </li>
-          <li>
-            <a href="Baitap.html" class="active"
-              ><i class="fa-solid fa-pen-to-square me-1"></i>Bài tập</a
-            >
-          </li>
-          <li>
-            <a href="Mophong.html"
-              ><i class="fa-solid fa-microchip me-1"></i>Mô phỏng</a
-            >
-          </li>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="Kienthuc.html">Kiến thức</a></li>
+          <li><a href="Baitap.html" class="active">Bài tập</a></li>
+          <li><a href="Mophong.html">Mô phỏng</a></li>
         </ul>
       </div>
     </nav>
 
-    <header class="hero">
-      <div class="container">
-        <h1><i class="fa-solid fa-pen-nib me-2"></i>Bài tập Vật lý</h1>
-        <p>
-          Nơi bạn sẽ tự làm các bài tập, câu hỏi và lời giải... Kiên trì là một
-          bài học quý giá. ⚔️
+    <main class="container" style="padding-top: 8rem">
+      <div class="quiz-header reveal">
+        <h1>🎯 Luyện Tập Thông Minh</h1>
+        <p style="color: var(--muted)">
+          Chọn chủ đề phù hợp. Hệ thống sẽ chấm điểm tức thì & giải thích chi
+          tiết.
         </p>
       </div>
-    </header>
 
-    <main class="container">
-      <div class="card-grid">
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-list-check"></i></div>
-          <h3>Trắc nghiệm nhanh</h3>
-          <p>500+ câu hỏi bám sát chương trình Trung học & Đại học.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-calculator"></i></div>
-          <h3>Tự luận nâng cao</h3>
-          <p>Bài tập định lượng, phân tích đa bước, lời giải chi tiết.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-trophy"></i></div>
-          <h3>Đề thi thử</h3>
-          <p>Mô phỏng áp lực phòng thi, chấm điểm tự động.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-chart-line"></i></div>
-          <h3>Theo dõi tiến độ</h3>
-          <p>Biểu đồ thống kê điểm mạnh/yếu & lộ trình ôn tập.</p>
-        </a>
-      </div>
+      <!-- TOPIC SELECTION -->
+      <section id="topic-screen" class="reveal">
+        <div class="grade-title">📘 Lớp 10</div>
+        <div class="topic-grid" id="grid-10"></div>
+        <div class="grade-title" style="border-left-color: var(--secondary)">
+          📕 Lớp 11
+        </div>
+        <div class="topic-grid" id="grid-11"></div>
+        <div class="grade-title" style="border-left-color: var(--success)">
+          📗 Lớp 12
+        </div>
+        <div class="topic-grid" id="grid-12"></div>
+      </section>
+
+      <!-- QUIZ AREA -->
+      <section id="quiz-screen" style="display: none">
+        <div class="progress-bar">
+          <div class="progress-fill" id="prog"></div>
+        </div>
+        <div class="quiz-box">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 1rem;
+              color: var(--muted);
+              font-size: 0.9rem;
+            "
+          >
+            <span id="topic-badge"></span>
+            <span id="q-counter">Câu 1/5</span>
+          </div>
+          <div class="question-text" id="q-text"></div>
+          <div class="options" id="opts"></div>
+          <div class="explanation" id="explain"></div>
+          <div class="nav-btns">
+            <button class="btn-quiz" onclick="backToTopics()">
+              ↺ Đổi chủ đề
+            </button>
+            <button
+              class="btn-quiz primary"
+              id="next-btn"
+              onclick="nextQuestion()"
+              disabled
+            >
+              Câu tiếp ➡️
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULTS -->
+      <section id="result-screen" style="display: none">
+        <div class="quiz-box result-box">
+          <div class="score-circle" id="final-score">0/5</div>
+          <h2 id="result-title">🎉 Xuất sắc!</h2>
+          <p
+            id="result-msg"
+            style="
+              color: var(--muted);
+              margin: 0.5rem auto 1.5rem;
+              max-width: 500px;
+            "
+          ></p>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              justify-content: center;
+              flex-wrap: wrap;
+            "
+          >
+            <button class="btn-quiz primary" onclick="restartQuiz()">
+              🔄 Làm lại
+            </button>
+            <button class="btn-quiz" onclick="backToTopics()">
+              📚 Chọn chủ đề khác
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer>
-      <p>&copy; 2026 Physics Lab | Tự học & Tiến bộ</p>
-    </footer>
+    <footer>© 2026 Physics Lab | Luyện tập tạo nên sự hoàn hảo 💪</footer>
+    <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
 
     <script>
-      // Page Transition Logic
-      const transitionOverlay = document.querySelector(".page-transition");
-      document.querySelectorAll('a[href$=".html"]').forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          transitionOverlay.classList.add("active");
-          setTimeout(() => (window.location.href = link.href), 350);
+      // 🔗 CORE UI (Loader, Cursor, Particles, Nav, Scroll Reveal)
+      window.addEventListener("load", () =>
+        document.getElementById("loader").classList.add("hidden"),
+      );
+      const dot = document.querySelector(".cursor-dot"),
+        outline = document.querySelector(".cursor-outline");
+      window.addEventListener("mousemove", (e) => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        outline.style.left = e.clientX + "px";
+        outline.style.top = e.clientY + "px";
+      });
+      document
+        .querySelectorAll("a, button, .topic-card, .opt")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            outline.classList.add("cursor-hover"),
+          );
+          el.addEventListener("mouseleave", () =>
+            outline.classList.remove("cursor-hover"),
+          );
         });
+      const cvs = document.getElementById("particles"),
+        ctx = cvs.getContext("2d"),
+        particles = [];
+      function resize() {
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      for (let i = 0; i < 40; i++)
+        particles.push({
+          x: Math.random() * cvs.width,
+          y: Math.random() * cvs.height,
+          r: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+        });
+      function drawBg() {
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        particles.forEach((p) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > cvs.width) p.dx *= -1;
+          if (p.y < 0 || p.y > cvs.height) p.dy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.12)";
+          ctx.fill();
+        });
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+      const obs = new IntersectionObserver(
+        (e) =>
+          e.forEach(
+            (t) => t.isIntersecting && t.target.classList.add("visible"),
+          ),
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+      let lastScroll = 0;
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("navbar")
+          .classList.toggle(
+            "hide",
+            window.scrollY > lastScroll && window.scrollY > 100,
+          );
+        lastScroll = window.scrollY;
       });
 
-      // Fade In on Scroll
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-          });
+      // 📚 QUESTION BANK (Bám sát 13 chủ đề)
+      const bank = {
+        "10-dong-hoc": {
+          name: "Động học",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Trong chuyển động thẳng nhanh dần đều, đại lượng nào không đổi?",
+              opts: ["Vận tốc", "Gia tốc", "Li độ", "Quãng đường"],
+              ans: 1,
+              ex: "Gia tốc a là hằng số dương trong chuyển động nhanh dần đều.",
+            },
+            {
+              q: "Phương trình chuyển động thẳng đều là:",
+              opts: [
+                "x = x₀ + v₀t + ½at²",
+                "x = x₀ + vt",
+                "v = v₀ + at",
+                "s = v²/2a",
+              ],
+              ans: 1,
+              ex: "Chuyển động thẳng đều có a=0, nên x = x₀ + vt.",
+            },
+            {
+              q: "Đơn vị của gia tốc là:",
+              opts: ["m/s", "m/s²", "km/h", "N"],
+              ans: 1,
+              ex: "Gia tốc đo độ biến thiên vận tốc theo thời gian: m/s².",
+            },
+            {
+              q: "Vật rơi tự do từ độ cao h, thời gian rơi là:",
+              opts: ["t = √(2h/g)", "t = h/g", "t = 2h/g", "t = √(h/2g)"],
+              ans: 0,
+              ex: "Từ h = ½gt² suy ra t = √(2h/g).",
+            },
+            {
+              q: "Đồ thị vận tốc - thời gian của chuyển động thẳng đều là:",
+              opts: [
+                "Đường cong",
+                "Đường thẳng nghiêng",
+                "Đường thẳng song song trục Ot",
+                "Parabol",
+              ],
+              ans: 2,
+              ex: "Vận tốc không đổi nên đồ thị là đường thẳng song song trục thời gian.",
+            },
+          ],
         },
-        { threshold: 0.15 },
-      );
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
+        "10-dong-luc-hoc": {
+          name: "Động lực học",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Định luật II Newton được biểu diễn bằng công thức:",
+              opts: ["F = ma", "F = mv", "P = mg", "W = Fs"],
+              ans: 0,
+              ex: "Định luật II: F = m·a (lực gây ra gia tốc).",
+            },
+            {
+              q: "Lực ma sát trượt phụ thuộc vào:",
+              opts: [
+                "Diện tích tiếp xúc",
+                "Tốc độ vật",
+                "Áp lực và hệ số ma sát",
+                "Khối lượng riêng",
+              ],
+              ans: 2,
+              ex: "F_ms = μ·N, phụ thuộc hệ số ma sát μ và áp lực N.",
+            },
+            {
+              q: "Khi vật chuyển động tròn đều, lực hướng tâm có độ lớn:",
+              opts: ["F = mω²r", "F = mv", "F = ma²", "F = mω"],
+              ans: 0,
+              ex: "Công thức lực hướng tâm: F_ht = mω²r = mv²/r.",
+            },
+            {
+              q: "Lực và phản lực theo định luật III Newton:",
+              opts: [
+                "Cùng phương, cùng chiều",
+                "Cân bằng nhau",
+                "Khác độ lớn",
+                "Xuất hiện và mất đi đồng thời",
+              ],
+              ans: 3,
+              ex: "Lực và phản lực xuất hiện/mất đi đồng thời, ngược chiều, không cân bằng vì đặt lên 2 vật khác nhau.",
+            },
+            {
+              q: "Quán tính của vật đặc trưng bởi:",
+              opts: ["Vận tốc", "Khối lượng", "Gia tốc", "Lực tác dụng"],
+              ans: 1,
+              ex: "Khối lượng là đại lượng đo mức quán tính.",
+            },
+          ],
+        },
+        "10-nang-luong": {
+          name: "Năng lượng",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Động năng của vật phụ thuộc vào:",
+              opts: [
+                "Khối lượng và vận tốc",
+                "Khối lượng và độ cao",
+                "Độ cứng lò xo",
+                "Thời gian chuyển động",
+              ],
+              ans: 0,
+              ex: "W_đ = ½mv², phụ thuộc m và v.",
+            },
+            {
+              q: "Thế năng trọng trường bằng 0 khi vật ở:",
+              opts: [
+                "Mặt đất (mốc thế năng)",
+                "Độ cao cực đại",
+                "Vị trí cân bằng",
+                "Biên độ",
+              ],
+              ans: 0,
+              ex: "W_t = mgh, chọn gốc thế năng ở mặt đất thì h=0 → W_t=0.",
+            },
+            {
+              q: "Định luật bảo toàn cơ năng đúng khi:",
+              opts: [
+                "Có ma sát",
+                "Chỉ có lực thế tác dụng",
+                "Vật chuyển động nhanh dần",
+                "Có lực cản không khí",
+              ],
+              ans: 1,
+              ex: "Cơ năng bảo toàn khi hệ kín, chỉ có lực thế (trọng lực, đàn hồi).",
+            },
+            {
+              q: "Công suất được tính bằng:",
+              opts: ["P = A/t", "P = F·t", "P = W·t", "P = m·g"],
+              ans: 0,
+              ex: "Công suất = Công / Thời gian (P = A/t).",
+            },
+            {
+              q: "Cơ năng của con lắc lò xo dao động điều hòa:",
+              opts: [
+                "Biến thiên tuần hoàn",
+                "Bảo toàn",
+                "Giảm dần",
+                "Tăng dần",
+              ],
+              ans: 1,
+              ex: "Bỏ qua ma sát, cơ năng con lắc lò xo được bảo toàn.",
+            },
+          ],
+        },
+        "10-dong-luong": {
+          name: "Động lượng",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Động lượng là đại lượng:",
+              opts: [
+                "Vô hướng",
+                "Vectơ",
+                "Không đổi với mọi vật",
+                "Bằng 0 khi vật đứng yên",
+              ],
+              ans: 1,
+              ex: "p = m·v, cùng hướng với vận tốc → đại lượng vectơ.",
+            },
+            {
+              q: "Hệ cô lập là hệ:",
+              opts: [
+                "Có ngoại lực tác dụng",
+                "Không có ngoại lực hoặc ngoại lực cân bằng",
+                "Chuyển động thẳng đều",
+                "Đứng yên",
+              ],
+              ans: 1,
+              ex: "Định luật bảo toàn động lượng áp dụng cho hệ cô lập (ΣF_ngoại = 0).",
+            },
+            {
+              q: "Va chạm đàn hồi là va chạm:",
+              opts: [
+                "Mất động năng",
+                "Bảo toàn động năng và động lượng",
+                "Chỉ bảo toàn động lượng",
+                "Vật dính vào nhau",
+              ],
+              ans: 1,
+              ex: "Va chạm đàn hồi: bảo toàn cả động năng và động lượng.",
+            },
+            {
+              q: "Đơn vị của động lượng:",
+              opts: ["kg·m/s", "N·s", "kg·m/s²", "Cả A và B"],
+              ans: 3,
+              ex: "1 kg·m/s = 1 N·s (vì F=ma → N=kg·m/s² → N·s = kg·m/s).",
+            },
+            {
+              q: "Xung lượng của lực bằng:",
+              opts: ["F·Δt", "F/t", "m·v", "F·s"],
+              ans: 0,
+              ex: "Xung lượng = Lực × Thời gian tác dụng (Δp = F·Δt).",
+            },
+          ],
+        },
+        "10-chuyen-dong-tron": {
+          name: "Chuyển động tròn đều",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Đại lượng nào không đổi trong chuyển động tròn đều?",
+              opts: ["Vận tốc", "Gia tốc", "Tốc độ dài", "Vectơ vận tốc"],
+              ans: 2,
+              ex: "Tốc độ dài v không đổi, nhưng hướng vận tốc thay đổi liên tục.",
+            },
+            {
+              q: "Liên hệ giữa tần số f và chu kỳ T:",
+              opts: ["f = T", "f = 1/T", "f = 2πT", "f = T/2π"],
+              ans: 1,
+              ex: "Tần số là số vòng trong 1 giây, f = 1/T.",
+            },
+            {
+              q: "Vectơ gia tốc hướng tâm có đặc điểm:",
+              opts: [
+                "Cùng hướng vận tốc",
+                "Ngược hướng vận tốc",
+                "Luôn hướng vào tâm quỹ đạo",
+                "Vuông góc với bán kính",
+              ],
+              ans: 2,
+              ex: "Gia tốc hướng tâm luôn hướng vào tâm quỹ đạo, vuông góc với vận tốc.",
+            },
+            {
+              q: "Công thức tính tốc độ góc ω:",
+              opts: ["ω = v·r", "ω = v/r", "ω = r/v", "ω = 2πr"],
+              ans: 1,
+              ex: "ω = v/r = 2πf = 2π/T.",
+            },
+            {
+              q: "Chu kỳ quay của kim phút đồng hồ là:",
+              opts: ["12 giờ", "1 giờ", "24 giờ", "60 giây"],
+              ans: 1,
+              ex: "Kim phút quay 1 vòng hết 1 giờ → T = 1h = 3600s.",
+            },
+          ],
+        },
+        "10-bien-dang-ap-suat": {
+          name: "Biến dạng & Áp suất",
+          grade: "Lớp 10",
+          qs: [
+            {
+              q: "Định luật Hooke: Trong giới hạn đàn hồi, lực đàn hồi tỉ lệ với:",
+              opts: [
+                "Khối lượng vật",
+                "Độ biến dạng",
+                "Diện tích tiếp xúc",
+                "Vận tốc",
+              ],
+              ans: 1,
+              ex: "F_đh = k·|Δl|, tỉ lệ thuận với độ biến dạng.",
+            },
+            {
+              q: "Áp suất chất lỏng tại độ sâu h:",
+              opts: ["p = ρgh", "p = F/S", "p = p₀ + ρgh", "p = m/V"],
+              ans: 2,
+              ex: "Áp suất thủy tĩnh: p = p₀ + ρgh (p₀ là áp suất khí quyển).",
+            },
+            {
+              q: "Lực đẩy Archimedes phụ thuộc vào:",
+              opts: [
+                "Khối lượng vật",
+                "Trọng lượng riêng chất lỏng & thể tích chìm",
+                "Hình dạng vật",
+                "Độ sâu vật chìm",
+              ],
+              ans: 1,
+              ex: "F_A = d·V_chìm = ρgV_chìm.",
+            },
+            {
+              q: "Nguyên lý Pascal: Áp suất tác dụng lên chất lỏng được truyền:",
+              opts: [
+                "Giảm dần theo khoảng cách",
+                "Nguyên vẹn theo mọi hướng",
+                "Chỉ theo phương thẳng đứng",
+                "Tăng lên 2 lần",
+              ],
+              ans: 1,
+              ex: "Áp suất truyền nguyên vẹn theo mọi hướng trong lòng chất lỏng.",
+            },
+            {
+              q: "Suất đàn hồi E đặc trưng cho:",
+              opts: [
+                "Khả năng chịu lực",
+                "Độ cứng của vật liệu",
+                "Khối lượng riêng",
+                "Hệ số ma sát",
+              ],
+              ans: 1,
+              ex: "E đặc trưng cho độ cứng của vật liệu, E càng lớn vật càng khó biến dạng.",
+            },
+          ],
+        },
+        "11-dao-dong-song": {
+          name: "Dao động và sóng",
+          grade: "Lớp 11",
+          qs: [
+            {
+              q: "Tại vị trí cân bằng của dao động điều hòa:",
+              opts: ["v=0, a max", "v max, a=0", "v max, a max", "v=0, a=0"],
+              ans: 1,
+              ex: "Ở VTCB, thế năng=0 → động năng max → v max. Lực kéo về=0 → a=0.",
+            },
+            {
+              q: "Bước sóng λ là:",
+              opts: [
+                "Quãng đường vật đi trong 1s",
+                "Khoảng cách giữa 2 điểm gần nhất dao động cùng pha",
+                "Tốc độ truyền sóng",
+                "Chu kỳ dao động",
+              ],
+              ans: 1,
+              ex: "Bước sóng = khoảng cách ngắn nhất giữa 2 điểm dao động cùng pha.",
+            },
+            {
+              q: "Sóng ngang là sóng có phương dao động:",
+              opts: [
+                "Trùng phương truyền",
+                "Vuông góc phương truyền",
+                "Nằm ngang",
+                "Nằm dọc",
+              ],
+              ans: 1,
+              ex: "Sóng ngang: phần tử môi trường dao động ⊥ phương truyền sóng.",
+            },
+            {
+              q: "Giao thoa sóng xảy ra khi 2 sóng:",
+              opts: [
+                "Cùng tần số, lệch pha không đổi",
+                "Khác tần số",
+                "Cùng biên độ",
+                "Truyền ngược chiều",
+              ],
+              ans: 0,
+              ex: "Điều kiện giao thoa: cùng phương, cùng tần số, độ lệch pha không đổi.",
+            },
+            {
+              q: "Tốc độ truyền sóng phụ thuộc vào:",
+              opts: [
+                "Tần số sóng",
+                "Biên độ sóng",
+                "Môi trường truyền sóng",
+                "Bước sóng",
+              ],
+              ans: 2,
+              ex: "Tốc độ sóng chỉ phụ thuộc vào tính chất môi trường (đàn hồi, mật độ...).",
+            },
+          ],
+        },
+        "11-dien-truong": {
+          name: "Điện trường",
+          grade: "Lớp 11",
+          qs: [
+            {
+              q: "Cường độ điện trường E là đại lượng:",
+              opts: [
+                "Vô hướng",
+                "Vectơ",
+                "Không phụ thuộc điện tích thử",
+                "Luôn dương",
+              ],
+              ans: 1,
+              ex: "E = F/q, đặc trưng cho điện trường về mặt lực, là đại lượng vectơ.",
+            },
+            {
+              q: "Đường sức điện trường có đặc điểm:",
+              opts: [
+                "Cắt nhau",
+                "Khép kín",
+                "Không cắt nhau, đi ra (+) vào (-)",
+                "Song song nhau",
+              ],
+              ans: 2,
+              ex: "Đường sức không cắt nhau, chiều đi từ điện tích dương sang âm.",
+            },
+            {
+              q: "Công của lực điện trường khi điện tích di chuyển:",
+              opts: [
+                "Phụ thuộc hình dạng đường đi",
+                "Không phụ thuộc hình dạng đường đi",
+                "Luôn dương",
+                "Luôn âm",
+              ],
+              ans: 1,
+              ex: "Lực điện trường là lực thế, công chỉ phụ thuộc điểm đầu và điểm cuối.",
+            },
+            {
+              q: "Điện dung của tụ điện phụ thuộc vào:",
+              opts: [
+                "Hiệu điện thế",
+                "Điện tích",
+                "Kích thước, hình dạng & chất điện môi",
+                "Dòng điện",
+              ],
+              ans: 2,
+              ex: "C = εS/(4πkd), phụ thuộc cấu tạo tụ, không phụ thuộc Q hay U.",
+            },
+            {
+              q: "Thuyết electron giải thích hiện tượng nhiễm điện do:",
+              opts: [
+                "Ma sát, tiếp xúc, hưởng ứng",
+                "Chỉ do nhiệt",
+                "Chỉ do ánh sáng",
+                "Chỉ do áp suất",
+              ],
+              ans: 0,
+              ex: "Thuyết electron giải thích 3 hiện tượng nhiễm điện cơ bản.",
+            },
+          ],
+        },
+        "11-dong-dien": {
+          name: "Dòng điện & Mạch điện",
+          grade: "Lớp 11",
+          qs: [
+            {
+              q: "Cường độ dòng điện được đo bằng:",
+              opts: ["Vôn kế", "Ampe kế", "Ôm kế", "Oát kế"],
+              ans: 1,
+              ex: "Ampe kế mắc nối tiếp để đo I.",
+            },
+            {
+              q: "Định luật Ohm cho toàn mạch:",
+              opts: ["I = U/R", "I = ξ/(R+r)", "I = q/t", "P = UI"],
+              ans: 1,
+              ex: "I = suất điện động / (điện trở ngoài + điện trở trong).",
+            },
+            {
+              q: "Ghép nối tiếp các nguồn điện giống nhau:",
+              opts: [
+                "ξ_b = ξ, r_b = r/n",
+                "ξ_b = nξ, r_b = nr",
+                "ξ_b = nξ, r_b = r/n",
+                "ξ_b = ξ, r_b = nr",
+              ],
+              ans: 1,
+              ex: "Nối tiếp: cộng ξ và cộng r.",
+            },
+            {
+              q: "Điện năng tiêu thụ được đo bằng:",
+              opts: ["Ampe kế", "Vôn kế", "Công tơ điện", "Oát kế"],
+              ans: 2,
+              ex: "Công tơ điện đo điện năng tiêu thụ (kWh).",
+            },
+            {
+              q: "Hiện tượng đoản mạch xảy ra khi:",
+              opts: ["R → ∞", "R = 0", "r = 0", "ξ = 0"],
+              ans: 1,
+              ex: "Đoản mạch: điện trở ngoài R≈0 → I_max = ξ/r, rất nguy hiểm.",
+            },
+          ],
+        },
+        "12-vat-ly-nhiet": {
+          name: "Vật lý nhiệt",
+          grade: "Lớp 12",
+          qs: [
+            {
+              q: "Nguyên lý I nhiệt động lực học: ΔU = Q + A. Quy ước A>0 khi:",
+              opts: [
+                "Hệ nhận công",
+                "Hệ sinh công",
+                "Hệ tỏa nhiệt",
+                "Hệ nhận nhiệt",
+              ],
+              ans: 0,
+              ex: "A>0: hệ nhận công. A<0: hệ sinh công. Q>0: hệ nhận nhiệt.",
+            },
+            {
+              q: "Quá trình đẳng nhiệt là quá trình:",
+              opts: [
+                "Nhiệt độ không đổi",
+                "Áp suất không đổi",
+                "Thể tích không đổi",
+                "Nhiệt lượng không đổi",
+              ],
+              ans: 0,
+              ex: "Đẳng nhiệt: T = const. pV = const (Boyle-Mariotte).",
+            },
+            {
+              q: "Hiệu suất động cơ nhiệt luôn:",
+              opts: ["Bằng 100%", "Nhỏ hơn 100%", "Lớn hơn 100%", "Bằng 0"],
+              ans: 1,
+              ex: "Theo nguyên lý II, η < 100% do luôn có nhiệt thải ra nguồn lạnh.",
+            },
+            {
+              q: "Nhiệt dung riêng c của chất phụ thuộc vào:",
+              opts: [
+                "Khối lượng chất",
+                "Bản chất chất",
+                "Nhiệt độ môi trường",
+                "Áp suất",
+              ],
+              ans: 1,
+              ex: "c đặc trưng cho khả năng hấp thụ nhiệt của từng chất.",
+            },
+            {
+              q: "Truyền nhiệt bằng bức xạ không cần:",
+              opts: [
+                "Chênh lệch nhiệt độ",
+                "Môi trường vật chất",
+                "Diện tích bề mặt",
+                "Hệ số hấp thụ",
+              ],
+              ans: 1,
+              ex: "Bức xạ nhiệt truyền được trong chân không, không cần môi trường.",
+            },
+          ],
+        },
+        "12-khi-ly-tuong": {
+          name: "Khí lý tưởng",
+          grade: "Lớp 12",
+          qs: [
+            {
+              q: "Phương trình trạng thái khí lý tưởng:",
+              opts: [
+                "pV = const",
+                "p/T = const",
+                "pV/T = const",
+                "V/T = const",
+              ],
+              ans: 2,
+              ex: "pV/T = const (phương trình Clapeyron).",
+            },
+            {
+              q: "Quá trình đẳng tích tuân theo định luật:",
+              opts: ["Boyle-Mariotte", "Charles", "Gay-Lussac", "Newton"],
+              ans: 1,
+              ex: "Đẳng tích (V=const): p/T = const → Định luật Charles.",
+            },
+            {
+              q: "Đồ thị (p,V) của quá trình đẳng nhiệt là:",
+              opts: ["Đường thẳng", "Hyperbol", "Parabol", "Đường tròn"],
+              ans: 1,
+              ex: "pV = const → p tỉ lệ nghịch V → đồ thị hyperbol.",
+            },
+            {
+              q: "Khí lý tưởng tuân theo các định luật:",
+              opts: [
+                "Chỉ Boyle-Mariotte",
+                "Chỉ Charles",
+                "Cả 3 định luật chất khí",
+                "Không định luật nào",
+              ],
+              ans: 2,
+              ex: "Khí lý tưởng tuân thủ đầy đủ các định luật thực nghiệm chất khí.",
+            },
+            {
+              q: "Nhiệt độ tuyệt đối 0 K tương ứng:",
+              opts: ["0°C", "-273°C", "-100°C", "100°C"],
+              ans: 1,
+              ex: "0 K = -273.15°C, nhiệt độ thấp nhất có thể đạt được.",
+            },
+          ],
+        },
+        "12-tu-truong": {
+          name: "Từ trường",
+          grade: "Lớp 12",
+          qs: [
+            {
+              q: "Lực từ tác dụng lên dây dẫn mang dòng điện:",
+              opts: ["F = BIL sinα", "F = BIL cosα", "F = qvB", "F = μ₀I/2πr"],
+              ans: 0,
+              ex: "Công thức lực từ: F = BIL sinα (α là góc giữa B và I).",
+            },
+            {
+              q: "Cảm ứng từ tại tâm vòng dây tròn:",
+              opts: ["B = μ₀I/2πr", "B = μ₀I/2R", "B = μ₀nI", "B = 0"],
+              ans: 1,
+              ex: "B = μ₀I/(2R) với R là bán kính vòng dây.",
+            },
+            {
+              q: "Suất điện động cảm ứng xuất hiện khi:",
+              opts: [
+                "Từ thông qua mạch biến thiên",
+                "Dòng điện không đổi",
+                "Nam châm đứng yên",
+                "Mạch kín không chuyển động",
+              ],
+              ans: 0,
+              ex: "Định luật Faraday: e_c = -dΦ/dt. Từ thông biến thiên sinh ra suất điện động.",
+            },
+            {
+              q: "Lực Lorentz tác dụng lên điện tích chuyển động trong từ trường có phương:",
+              opts: [
+                "Cùng phương v",
+                "Cùng phương B",
+                "Vuông góc với mặt phẳng chứa v và B",
+                "Ngược phương v",
+              ],
+              ans: 2,
+              ex: "F_Lorentz ⊥ v và ⊥ B, xác định bằng quy tắc bàn tay trái.",
+            },
+            {
+              q: "Hiện tượng tự cảm xảy ra do:",
+              opts: [
+                "Biến thiên dòng điện trong mạch",
+                "Từ trường ngoài biến thiên",
+                "Dòng điện không đổi",
+                "Điện trở thay đổi",
+              ],
+              ans: 0,
+              ex: "Tự cảm: suất điện động cảm ứng sinh ra do sự biến thiên dòng điện trong chính mạch đó.",
+            },
+          ],
+        },
+        "12-vat-ly-hat-nhan": {
+          name: "Vật lý hạt nhân",
+          grade: "Lớp 12",
+          qs: [
+            {
+              q: "Hạt nhân nguyên tử cấu tạo bởi:",
+              opts: [
+                "Electron và proton",
+                "Proton và neutron",
+                "Neutron và electron",
+                "Chỉ proton",
+              ],
+              ans: 1,
+              ex: "Hạt nhân gồm proton (p) và neutron (n), gọi chung là nucleon.",
+            },
+            {
+              q: "Năng lượng liên kết riêng càng lớn thì hạt nhân:",
+              opts: [
+                "Càng kém bền",
+                "Càng bền vững",
+                "Càng dễ phân rã",
+                "Càng nặng",
+              ],
+              ans: 1,
+              ex: "Năng lượng liên kết riêng đặc trưng cho độ bền vững của hạt nhân.",
+            },
+            {
+              q: "Phóng xạ β- thực chất là:",
+              opts: [
+                "Phát ra electron từ vỏ",
+                "Neutron biến thành proton + electron",
+                "Proton biến thành neutron",
+                "Phát ra positron",
+              ],
+              ans: 1,
+              ex: "β-: n → p + e⁻ + ν̄_e. Electron phát ra từ hạt nhân.",
+            },
+            {
+              q: "Phản ứng nhiệt hạch là:",
+              opts: [
+                "Phân chia hạt nhân nặng",
+                "Kết hợp hạt nhân nhẹ thành hạt nhân nặng hơn",
+                "Phân rã phóng xạ",
+                "Bắt neutron",
+              ],
+              ans: 1,
+              ex: "Nhiệt hạch: hợp hạch hạt nhân nhẹ (như H, He) ở nhiệt độ cực cao.",
+            },
+            {
+              q: "Độ hụt khối Δm được tính bằng:",
+              opts: [
+                "Σm_hạt nhân - Σm_nucleon",
+                "Σm_nucleon - m_hạt nhân",
+                "m_e - m_p",
+                "m_p + m_n",
+              ],
+              ans: 1,
+              ex: "Δm = (Z·m_p + N·m_n) - m_hạt nhân. Luôn dương.",
+            },
+          ],
+        },
+      };
+
+      // 🧠 QUIZ LOGIC
+      let currentTopic = null,
+        currentQs = [],
+        qIdx = 0,
+        score = 0,
+        answered = false;
+
+      function renderTopics() {
+        ["10", "11", "12"].forEach((g) => {
+          const grid = document.getElementById(`grid-${g}`);
+          grid.innerHTML = "";
+          Object.entries(bank).forEach(([key, data]) => {
+            if (data.grade === `Lớp ${g}`) {
+              const card = document.createElement("div");
+              card.className = "topic-card";
+              card.innerHTML = `
+              <div class="topic-info"><h3>${data.name}</h3><p>${data.qs.length} câu hỏi • Trắc nghiệm nhanh</p></div>
+              <span class="badge">Làm ngay →</span>
+            `;
+              card.onclick = () => startQuiz(key);
+              grid.appendChild(card);
+            }
+          });
+        });
+      }
+
+      function startQuiz(key) {
+        currentTopic = key;
+        currentQs = [...bank[key].qs]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 5);
+        qIdx = 0;
+        score = 0;
+        document.getElementById("topic-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "none";
+        document.getElementById("quiz-screen").style.display = "block";
+        document.getElementById("topic-badge").textContent =
+          bank[key].grade + " - " + bank[key].name;
+        loadQuestion();
+      }
+
+      function loadQuestion() {
+        answered = false;
+        document.getElementById("next-btn").disabled = true;
+        document.getElementById("q-counter").textContent =
+          `Câu ${qIdx + 1}/${currentQs.length}`;
+        document.getElementById("prog").style.width =
+          `${(qIdx / currentQs.length) * 100}%`;
+        document.getElementById("explain").classList.remove("show");
+
+        const q = currentQs[qIdx];
+        document.getElementById("q-text").textContent = q.q;
+        const optsDiv = document.getElementById("opts");
+        optsDiv.innerHTML = "";
+        q.opts.forEach((opt, i) => {
+          const d = document.createElement("div");
+          d.className = "opt";
+          d.textContent = opt;
+          d.onclick = () => checkAns(i, d, q);
+          optsDiv.appendChild(d);
+        });
+      }
+
+      function checkAns(selected, el, q) {
+        if (answered) return;
+        answered = true;
+        document.querySelectorAll(".opt").forEach((o, i) => {
+          o.classList.add("disabled");
+          if (i === q.ans) o.classList.add("correct");
+          else if (i === selected) o.classList.add("wrong");
+        });
+        if (selected === q.ans) score++;
+        document.getElementById("explain").textContent = "💡 " + q.ex;
+        document.getElementById("explain").classList.add("show");
+        document.getElementById("next-btn").disabled = false;
+      }
+
+      function nextQuestion() {
+        qIdx++;
+        if (qIdx >= currentQs.length) showResults();
+        else loadQuestion();
+      }
+
+      function showResults() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "block";
+        document.getElementById("final-score").textContent =
+          `${score}/${currentQs.length}`;
+        const pct = score / currentQs.length;
+        let title = "",
+          msg = "";
+        if (pct === 1) {
+          title = "🏆 Xuất sắc!";
+          msg = "Bạn đã nắm vững chủ đề này. Hãy thử thách chủ đề khác!";
+          launchConfetti();
+        } else if (pct >= 0.6) {
+          title = "👍 Khá tốt!";
+          msg = "Kiến thức khá vững, ôn lại 1-2 điểm yếu là hoàn hảo.";
+        } else {
+          title = "📚 Cần cố gắng!";
+          msg = "Đừng nản! Hãy xem lại lý thuyết và làm lại để nhớ sâu hơn.";
+        }
+        document.getElementById("result-title").textContent = title;
+        document.getElementById("result-msg").textContent = msg;
+      }
+
+      function restartQuiz() {
+        startQuiz(currentTopic);
+      }
+      function backToTopics() {
+        document.getElementById("quiz-screen").style.display = "none";
+        document.getElementById("result-screen").style.display = "none";
+        document.getElementById("topic-screen").style.display = "block";
+      }
+
+      // 🎉 CONFETTI (Lightweight)
+      function launchConfetti() {
+        const c = document.getElementById("confetti-canvas");
+        const cx = c.getContext("2d");
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        const pieces = [];
+        for (let i = 0; i < 80; i++)
+          pieces.push({
+            x: Math.random() * c.width,
+            y: -20,
+            w: Math.random() * 8 + 4,
+            h: Math.random() * 8 + 4,
+            c: ["#3b82f6", "#8b5cf6", "#ec4899", "#10b981", "#fbbf24"][
+              Math.floor(Math.random() * 5)
+            ],
+            v: Math.random() * 4 + 2,
+            r: Math.random() * 360,
+            vr: Math.random() * 10 - 5,
+          });
+        let f = 0;
+        function draw() {
+          cx.clearRect(0, 0, c.width, c.height);
+          pieces.forEach((p) => {
+            p.y += p.v;
+            p.r += p.vr;
+            cx.save();
+            cx.translate(p.x, p.y);
+            cx.rotate((p.r * Math.PI) / 180);
+            cx.fillStyle = p.c;
+            cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            cx.restore();
+          });
+          f++;
+          if (f < 150) requestAnimationFrame(draw);
+          else cx.clearRect(0, 0, c.width, c.height);
+        }
+        draw();
+      }
+
+      renderTopics();
     </script>
   </body>
 </html>
