@@ -3,339 +3,773 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Kiến thức - Physics Lab</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <title>📖 Kiến Thức Vật Lý | Physics Lab</title>
+    <link rel="stylesheet" href="style.css" />
     <style>
-      /* GIỮ NGUYÊN CSS GIỐNG index.html (chỉ đổi phần nội dung chính) */
-      :root {
-        --bg-primary: #070a12;
-        --bg-card: rgba(20, 28, 45, 0.65);
-        --text: #e2e8f0;
-        --text2: #94a3b8;
-        --accent: #3b82f6;
-        --border: rgba(255, 255, 255, 0.08);
-        --glass: rgba(255, 255, 255, 0.04);
-        --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+      /* === KNOWLEDGE PAGE SPECIFIC === */
+      .knowledge-header {
+        padding-top: 8rem;
+        text-align: center;
+        margin-bottom: 2rem;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      .grade-section {
+        margin-bottom: 4rem;
+        scroll-margin-top: 110px;
       }
-      body {
-        background: var(--bg-primary);
-        color: var(--text);
-        font-family: "Segoe UI", system-ui, sans-serif;
-        line-height: 1.6;
-        overflow-x: hidden;
-        position: relative;
-        background-image:
-          radial-gradient(
-            circle at 15% 25%,
-            rgba(59, 130, 246, 0.15) 0%,
-            transparent 45%
-          ),
-          radial-gradient(
-            circle at 85% 75%,
-            rgba(139, 92, 246, 0.12) 0%,
-            transparent 45%
-          );
-        background-attachment: fixed;
+      .grade-title {
+        font-size: 1.6rem;
+        margin-bottom: 1.2rem;
+        padding-left: 1rem;
+        border-left: 4px solid var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
       }
-      body::before {
-        content: "";
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-          from 0deg at 50% 50%,
-          transparent 0deg,
-          rgba(59, 130, 246, 0.05) 60deg,
-          transparent 120deg,
-          rgba(139, 92, 246, 0.05) 180deg,
-          transparent 240deg,
-          rgba(236, 72, 153, 0.05) 300deg,
-          transparent 360deg
-        );
-        animation: spin 30s linear infinite;
-        z-index: -1;
-        pointer-events: none;
+      .toc {
+        position: sticky;
+        top: 100px;
+        z-index: 50;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1rem;
+        max-height: 80vh;
+        overflow-y: auto;
+        backdrop-filter: blur(10px);
+        scrollbar-width: thin;
+        scrollbar-color: var(--primary) transparent;
       }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+      .toc a {
+        display: block;
+        padding: 0.5rem 0.8rem;
+        color: var(--muted);
+        text-decoration: none;
+        border-left: 2px solid transparent;
+        transition: 0.2s;
+        border-radius: 6px;
+        margin-bottom: 4px;
+        font-size: 0.9rem;
       }
-      .page-transition {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--bg-primary);
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.35s var(--ease);
+      .toc a:hover,
+      .toc a.active {
+        color: #fff;
+        background: var(--surface-hover);
+        border-left-color: var(--primary);
       }
-      .page-transition.active {
-        opacity: 1;
-        pointer-events: all;
+      .topic {
+        margin-bottom: 1rem;
+        scroll-margin-top: 100px;
       }
-      nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 1rem 0;
-        background: var(--glass);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav-container {
-        max-width: 1100px;
-        margin: auto;
+      .topic-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 1.5rem;
-      }
-      .logo {
-        font-size: 1.4rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-decoration: none;
-      }
-      .nav-links {
-        display: flex;
-        gap: 1rem;
-        list-style: none;
-      }
-      .nav-links a {
-        color: var(--text2);
-        text-decoration: none;
-        padding: 0.5rem 0.9rem;
-        border-radius: 8px;
-        transition: all 0.3s var(--ease);
-      }
-      .nav-links a:hover,
-      .nav-links a.active {
-        color: var(--text);
-        background: rgba(255, 255, 255, 0.07);
-      }
-      .hero {
-        padding: 8rem 1.5rem 3rem;
-        text-align: center;
-      }
-      .hero h1 {
-        font-size: clamp(1.8rem, 4vw, 2.8rem);
-        font-weight: 800;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #fff 30%, #60a5fa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: fadeUp 0.6s var(--ease) both;
-      }
-      .hero p {
-        color: var(--text2);
-        max-width: 650px;
-        margin: 0 auto;
-        font-size: 1.05rem;
-        animation: fadeUp 0.6s var(--ease) 0.15s both;
-      }
-      .section {
-        max-width: 1100px;
-        margin: 2rem auto 0;
-        padding: 0 1.5rem;
-      }
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.5rem;
-      }
-      .card {
-        background: var(--bg-card);
+        cursor: pointer;
+        padding: 1rem 1.2rem;
+        background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 1.8rem;
-        text-decoration: none;
-        color: var(--text);
-        backdrop-filter: blur(8px);
-        position: relative;
+        border-radius: 12px;
+        transition: 0.3s;
+        user-select: none;
+      }
+      .topic-header:hover {
+        background: var(--surface-hover);
+        transform: translateX(4px);
+      }
+      .topic-header h3 {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin: 0;
+        font-size: 1.05rem;
+      }
+      .arrow {
+        transition: transform 0.3s;
+        font-size: 0.8rem;
+        opacity: 0.7;
+      }
+      .topic.open .arrow {
+        transform: rotate(180deg);
+      }
+      .topic-content {
+        max-height: 0;
         overflow: hidden;
         transition:
-          transform 0.35s var(--ease),
-          box-shadow 0.35s var(--ease),
-          border-color 0.35s var(--ease);
+          max-height 0.5s var(--ease),
+          padding 0.4s;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 12px 12px;
       }
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, var(--accent), #a78bfa, #ec4899);
-        opacity: 0;
-        transition: opacity 0.35s var(--ease);
+      .topic.open .topic-content {
+        max-height: 2000px;
+        padding: 1.2rem;
       }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        border-color: rgba(255, 255, 255, 0.15);
-      }
-      .card:hover::before {
-        opacity: 1;
-      }
-      .card-icon {
-        font-size: 2rem;
-        margin-bottom: 0.8rem;
-        display: inline-block;
-        background: linear-gradient(135deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .card h3 {
+      .formula-card {
+        background: rgba(0, 0, 0, 0.25);
+        padding: 0.7rem 1rem;
+        border-radius: 8px;
         margin: 0.5rem 0;
-        font-size: 1.2rem;
+        font-family: "Courier New", monospace;
+        cursor: pointer;
+        position: relative;
+        border-left: 3px solid var(--primary);
+        transition: 0.2s;
+        font-size: 0.95rem;
       }
-      .card p {
-        color: var(--text2);
-        font-size: 0.92rem;
-        margin: 0;
+      .formula-card:hover {
+        background: rgba(59, 130, 246, 0.12);
+        transform: scale(1.005);
       }
-      footer {
-        text-align: center;
-        margin-top: 4rem;
-        padding: 2rem;
-        color: var(--text2);
-        font-size: 0.9rem;
-        border-top: 1px solid var(--border);
-      }
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .fade-in {
+      .formula-card::after {
+        content: "📋 Copy";
+        position: absolute;
+        top: -28px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        background: var(--success);
+        color: #fff;
+        padding: 3px 8px;
+        border-radius: 6px;
+        font-size: 0.7rem;
         opacity: 0;
-        transform: translateY(15px);
-        transition:
-          opacity 0.5s var(--ease),
-          transform 0.5s var(--ease);
+        transition: 0.2s;
+        pointer-events: none;
+        white-space: nowrap;
       }
-      .fade-in.visible {
+      .formula-card.copied::after {
+        content: "✅ Đã copy!";
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+      .tag {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-right: 6px;
+        vertical-align: middle;
+      }
+      .tag-10 {
+        background: rgba(59, 130, 246, 0.2);
+        color: #60a5fa;
+      }
+      .tag-11 {
+        background: rgba(139, 92, 246, 0.2);
+        color: #a78bfa;
+      }
+      .tag-12 {
+        background: rgba(16, 185, 129, 0.2);
+        color: #10b981;
+      }
+      .highlight {
+        color: #fff;
+        font-weight: 500;
+        background: rgba(59, 130, 246, 0.15);
+        padding: 0 4px;
+        border-radius: 4px;
+      }
+      .warning {
+        background: rgba(239, 68, 68, 0.08);
+        border-left: 3px solid #ef4444;
+        padding: 0.7rem;
+        border-radius: 0 8px 8px 0;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+      }
+      .tip {
+        background: rgba(16, 185, 129, 0.08);
+        border-left: 3px solid var(--success);
+        padding: 0.7rem;
+        border-radius: 0 8px 8px 0;
+        margin-top: 0.8rem;
+        font-size: 0.9rem;
+      }
+      .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: var(--primary);
+        color: #fff;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: 0.3s;
+        z-index: 90;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      }
+      .back-to-top.show {
         opacity: 1;
         transform: translateY(0);
       }
-      @media (max-width: 768px) {
-        .hero {
-          padding: 7rem 1rem 2.5rem;
+      .reading-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        width: 0%;
+        z-index: 1000;
+        transition: width 0.1s;
+      }
+      @media (max-width: 900px) {
+        .toc {
+          display: none;
         }
-        .card-grid {
+        .sim-layout {
           grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <div class="page-transition"></div>
-    <nav>
-      <div class="nav-container">
-        <a href="index.html" class="logo"
-          ><i class="fa-solid fa-atom me-1"></i> Physics Lab</a
-        >
+    <div id="loader"><div class="spinner"></div></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <canvas id="particles"></canvas>
+    <div class="reading-progress" id="prog"></div>
+
+    <nav id="navbar">
+      <div class="nav-wrap">
+        <a href="index.html" class="logo">⚛️ <span>Physics Lab</span></a>
         <ul class="nav-links">
-          <li>
-            <a href="index.html"
-              ><i class="fa-solid fa-house me-1"></i>Trang chủ</a
-            >
-          </li>
-          <li>
-            <a href="Kienthuc.html" class="active"
-              ><i class="fa-solid fa-book-open me-1"></i>Kiến thức</a
-            >
-          </li>
-          <li>
-            <a href="Baitap.html"
-              ><i class="fa-solid fa-pen-to-square me-1"></i>Bài tập</a
-            >
-          </li>
-          <li>
-            <a href="Mophong.html"
-              ><i class="fa-solid fa-microchip me-1"></i>Mô phỏng</a
-            >
-          </li>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="Kienthuc.html" class="active">Kiến thức</a></li>
+          <li><a href="Baitap.html">Bài tập</a></li>
+          <li><a href="Mophong.html">Mô phỏng</a></li>
         </ul>
       </div>
     </nav>
 
-    <header class="hero">
-      <h1><i class="fa-solid fa-sun me-2"></i>Kiến thức Vật lý</h1>
-      <p>
-        Nơi bạn sẽ tự học lý thuyết, công thức, hình minh họa... Tri thức là
-        chìa khóa dẫn đến thành công. 🍀
+    <main class="container knowledge-header">
+      <h1 class="reveal">📖 Kho Kiến Thức Vật Lý</h1>
+      <p
+        class="reveal"
+        style="color: var(--muted); max-width: 650px; margin: 0.5rem auto 2rem"
+      >
+        Hệ thống lý thuyết ngắn gọn, công thức chuẩn xác & mẹo giải nhanh. Nhấn
+        vào mục để mở rộng, nhấn công thức để copy.
       </p>
-    </header>
 
-    <main class="section">
-      <div class="card-grid">
-        <a href="#" class="card fade-in"
-          ><div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
-          <h3>Điện học</h3>
-          <p>Định luật Ohm, mạch điện, công suất & năng lượng điện.</p></a
-        >
-        <a href="#" class="card fade-in"
-          ><div class="card-icon"><i class="fa-solid fa-wave-square"></i></div>
-          <h3>Dao động & Sóng</h3>
-          <p>Con lắc, sóng cơ, giao thoa & sóng dừng.</p></a
-        >
-        <a href="#" class="card fade-in"
-          ><div class="card-icon"><i class="fa-solid fa-magnet"></i></div>
-          <h3>Từ trường & Cảm ứng</h3>
-          <p>Lực Lorentz, định luật Faraday, máy biến áp.</p></a
-        >
-        <a href="#" class="card fade-in"
-          ><div class="card-icon"><i class="fa-solid fa-atom"></i></div>
-          <h3>Vật lý Hạt nhân</h3>
-          <p>Cấu tạo nguyên tử, phóng xạ, phản ứng hạt nhân.</p></a
-        >
+      <div class="sim-layout reveal" style="margin-top: 1rem">
+        <aside class="toc" id="toc">
+          <div
+            style="
+              margin-bottom: 0.8rem;
+              font-weight: 600;
+              color: var(--primary);
+            "
+          >
+            📘 Lớp 10
+          </div>
+          <a href="#dong-hoc" class="active">Động học</a>
+          <a href="#dong-luc-hoc">Động lực học</a>
+          <a href="#nang-luong">Năng lượng</a>
+          <a href="#dong-luong">Động lượng</a>
+          <a href="#chuyen-dong-tron">Chuyển động tròn đều</a>
+          <a href="#bien-dang-ap-suat">Biến dạng & Áp suất chất lỏng</a>
+
+          <div
+            style="
+              margin: 1.2rem 0 0.8rem;
+              font-weight: 600;
+              color: var(--secondary);
+            "
+          >
+            📕 Lớp 11
+          </div>
+          <a href="#dao-dong-song">Dao động và sóng</a>
+          <a href="#dien-truong">Điện trường</a>
+          <a href="#dong-dien">Dòng điện và mạch điện</a>
+
+          <div
+            style="
+              margin: 1.2rem 0 0.8rem;
+              font-weight: 600;
+              color: var(--success);
+            "
+          >
+            📗 Lớp 12
+          </div>
+          <a href="#vat-ly-nhiet">Vật lý nhiệt</a>
+          <a href="#khi-ly-tuong">Khí lý tưởng</a>
+          <a href="#tu-truong">Từ trường</a>
+          <a href="#vat-ly-hat-nhan">Vật lý hạt nhân</a>
+        </aside>
+
+        <div class="content-area">
+          <!-- LỚP 10 -->
+          <section class="grade-section reveal">
+            <h2 class="grade-title">📘 Lớp 10</h2>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>📐 Động học</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>
+                  Chuyển động thẳng đều, biến đổi đều, rơi tự do. Công thức cơ
+                  bản:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  v = v₀ + a·t
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  s = v₀t + ½at² | v² - v₀² = 2as
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Chọn chiều dương cùng chiều chuyển
+                  động. Nếu vật chậm dần, <code>a</code> ngược dấu
+                  <code>v</code>.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>⚖️ Động lực học</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>Định luật Newton I, II, III. Lực ma sát, lực hướng tâm:</p>
+                <div class="formula-card" onclick="copyF(this)">
+                  F = m·a | P = m·g
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  F_ms = μ·N | F_ht = m·v²/r = m·ω²r
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Định luật II chỉ đúng trong hệ quy
+                  chiếu quán tính. Lực ma sát luôn ngược chiều chuyển động tương
+                  đối.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>⚡ Năng lượng</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>
+                  Động năng, thế năng, định luật bảo toàn cơ năng & công suất:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  W_đ = ½mv² | W_t = mgh | W_tđ = ½k(Δl)²
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  W_1 = W_2 | A = F·s·cosα | P = A/t = F·v
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Bảo toàn cơ năng áp dụng khi
+                  <span class="highlight">chỉ có lực thế</span> (trọng lực, đàn
+                  hồi) tác dụng.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🚀 Động lượng</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>
+                  Động lượng, xung lượng, định luật bảo toàn động lượng & va
+                  chạm:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  p = m·v | Δp = F·Δt
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Σp_trước = Σp_sau | v'_1 = (m1-m2)v1/(m1+m2) (va chạm đàn hồi)
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Động lượng là đại lượng
+                  <span class="highlight">vectơ</span>. Luôn xét hệ kín (không
+                  có ngoại lực).
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🔄 Chuyển động tròn đều</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>
+                  Vận tốc dài, vận tốc góc, chu kỳ, tần số & gia tốc hướng tâm:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  v = ω·r | a_ht = v²/r = ω²r
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  T = 2π/ω = 1/f | f = 1/T
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Cùng vật quay →
+                  <span class="highlight">ω, f, T</span> bằng nhau. Cùng
+                  dây/tiếp xúc → <span class="highlight">v</span> bằng nhau.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🌊 Biến dạng & Áp suất chất lỏng</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-10">Lớp 10</span>
+                <p>
+                  Định luật Hooke, áp suất thủy tĩnh, nguyên lý Pascal & lực đẩy
+                  Archimedes:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  σ = F/S = E·(Δl/l₀) | p = p₀ + ρgh
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  F_A = ρ·g·V_chìm | p₁/S₁ = p₂/S₂
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Áp suất chất lỏng phụ thuộc độ sâu,
+                  không phụ thuộc hình dạng bình chứa.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- LỚP 11 -->
+          <section class="grade-section reveal">
+            <h2 class="grade-title">📕 Lớp 11</h2>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🌊 Dao động và sóng</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-11">Lớp 11</span>
+                <p>
+                  Dao động điều hòa, con lắc, phương trình sóng, giao thoa &
+                  sóng dừng:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  x = A cos(ωt + φ) | v = -ωA sin(ωt + φ)
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  u = A cos(ωt - 2πx/λ) | λ = v·T = v/f
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Δd = kλ (cực đại) | Δd = (k+½)λ (cực tiểu)
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Tại VTCB:
+                  <span class="highlight">v max, a=0</span>. Tại biên:
+                  <span class="highlight">v=0, a max</span>.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>⚡ Điện trường</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-11">Lớp 11</span>
+                <p>
+                  Định luật Coulomb, cường độ điện trường, điện thế, tụ điện:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  F = k|q₁q₂|/r² (k = 9·10⁹) | E = F/q
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  U = V_A - V_B = E·d | C = Q/U | W = ½CU²
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Điện trường là đại lượng vectơ.
+                  Đường sức điện <span class="highlight">không cắt nhau</span>,
+                  đi ra từ (+) vào (-).
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🔌 Dòng điện và mạch điện</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-11">Lớp 11</span>
+                <p>
+                  Định luật Ohm, công suất điện, suất điện động, ghép nguồn &
+                  mạch kín:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  I = U/R | P = U·I = I²R = U²/R
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  ξ = A/q | I = ξ/(R+r) | U_N = ξ - I·r
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Ghép nối tiếp: ξ_b = Σξ, r_b = Σr | Ghép song song: ξ_b = ξ,
+                  1/r_b = Σ1/r
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Đo điện áp mắc
+                  <span class="highlight">song song</span>, đo dòng điện mắc
+                  <span class="highlight">nối tiếp</span>. Ampe kế có R≈0, Vôn
+                  kế có R→∞.
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- LỚP 12 -->
+          <section class="grade-section reveal">
+            <h2 class="grade-title">📗 Lớp 12</h2>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🔥 Vật lý nhiệt</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-12">Lớp 12</span>
+                <p>
+                  Nguyên lý I & II nhiệt động lực học, truyền nhiệt, cân bằng
+                  nhiệt & hiệu suất:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  ΔU = Q + A | Q = mcΔT
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  η = A/Q₁ = 1 - Q₂/Q₁ | Q_thu = Q_tỏa
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Quy ước: Vật
+                  <span class="highlight">nhận nhiệt Q>0</span>, vật
+                  <span class="highlight">sinh công A<0</span> (hoặc dùng ΔU = Q
+                  - A tùy SGK).
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>💨 Khí lý tưởng</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-12">Lớp 12</span>
+                <p>
+                  Phương trình trạng thái, các quá trình đẳng nhiệt/đẳng
+                  tích/đẳng áp:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  pV/T = const (Clapeyron)
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Đẳng nhiệt: pV = const (Boyle-Mariotte)
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Đẳng tích: p/T = const (Charles) | Đẳng áp: V/T = const
+                  (Gay-Lussac)
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Đổi nhiệt độ sang Kelvin:
+                  <span class="highlight">T(K) = t(°C) + 273</span>. Luôn kiểm
+                  tra đơn vị áp suất & thể tích.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>🧲 Từ trường</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-12">Lớp 12</span>
+                <p>
+                  Cảm ứng từ, lực từ, lực Lorentz, cảm ứng điện từ & suất điện
+                  động cảm ứng:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  F = BIL sinα | F = |q|vB sinα
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  Φ = B·S·cosα | e_c = -dΦ/dt
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  B_dây thẳng = μ₀I/(2πr) | B_ống dây = μ₀nI
+                </div>
+                <div class="warning">
+                  ⚠️ <strong>Lưu ý:</strong> Quy tắc bàn tay trái (lực từ), bàn
+                  tay phải (chiều dòng điện cảm ứng). Suất điện động
+                  <span class="highlight">ngược chiều</span> biến thiên từ
+                  thông.
+                </div>
+              </div>
+            </div>
+
+            <div class="topic">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <h3>⚛️ Vật lý hạt nhân</h3>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="topic-content">
+                <span class="tag tag-12">Lớp 12</span>
+                <p>
+                  Cấu tạo hạt nhân, năng lượng liên kết, phóng xạ, phản ứng hạt
+                  nhân:
+                </p>
+                <div class="formula-card" onclick="copyF(this)">
+                  ΔE = Δm·c² | W_lk = Δm·931.5 (MeV)
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  N = N₀·e^(-λt) | T = ln2/λ
+                </div>
+                <div class="formula-card" onclick="copyF(this)">
+                  A_ZX → A-4_Z-2Y + ⁴₂He (α) | A_ZX → A_Z-1Y + ⁰_-1e (β-)
+                </div>
+                <div class="tip">
+                  💡 <strong>Mẹo:</strong> Phản ứng
+                  <span class="highlight">tỏa năng lượng</span> khi m_trước >
+                  m_sau. Chu kỳ bán rã là thời gian số hạt giảm còn ½.
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </main>
 
-    <footer>&copy; 2026 Physics Lab | Tự học & Tiến bộ</footer>
+    <div
+      class="back-to-top"
+      id="topBtn"
+      onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+    >
+      ↑
+    </div>
+    <footer>© 2026 Physics Lab | Học thông minh, không học nhồi nhét 🧠</footer>
+
     <script>
-      const transitionOverlay = document.querySelector(".page-transition");
-      document.querySelectorAll('a[href$=".html"]').forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          transitionOverlay.classList.add("active");
-          setTimeout(() => (window.location.href = link.href), 350);
+      // CORE UI
+      window.addEventListener("load", () =>
+        document.getElementById("loader").classList.add("hidden"),
+      );
+      const dot = document.querySelector(".cursor-dot"),
+        outline = document.querySelector(".cursor-outline");
+      window.addEventListener("mousemove", (e) => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        outline.style.left = e.clientX + "px";
+        outline.style.top = e.clientY + "px";
+      });
+      document
+        .querySelectorAll("a, button, .topic-header, .formula-card")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            outline.classList.add("cursor-hover"),
+          );
+          el.addEventListener("mouseleave", () =>
+            outline.classList.remove("cursor-hover"),
+          );
+        });
+
+      // PARTICLES
+      const cvs = document.getElementById("particles"),
+        ctx = cvs.getContext("2d"),
+        particles = [];
+      function resize() {
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      for (let i = 0; i < 45; i++)
+        particles.push({
+          x: Math.random() * cvs.width,
+          y: Math.random() * cvs.height,
+          r: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+        });
+      function drawBg() {
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        particles.forEach((p) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > cvs.width) p.dx *= -1;
+          if (p.y < 0 || p.y > cvs.height) p.dy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.12)";
+          ctx.fill();
+        });
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+
+      // REVEAL
+      const obs = new IntersectionObserver(
+        (e) =>
+          e.forEach(
+            (t) => t.isIntersecting && t.target.classList.add("visible"),
+          ),
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      // SCROLL SPY & PROGRESS
+      const sections = document.querySelectorAll("section, .topic");
+      const tocLinks = document.querySelectorAll(".toc a");
+      window.addEventListener("scroll", () => {
+        document.getElementById("prog").style.width =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+            100 +
+          "%";
+        document
+          .getElementById("topBtn")
+          .classList.toggle("show", window.scrollY > 400);
+        let current = "";
+        document.querySelectorAll("[id]").forEach((s) => {
+          if (s.offsetTop <= window.scrollY + 120) current = s.id;
+        });
+        tocLinks.forEach((a) => {
+          a.classList.remove("active");
+          if (a.getAttribute("href").includes(current))
+            a.classList.add("active");
         });
       });
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-          });
-        },
-        { threshold: 0.15 },
-      );
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
+
+      // INTERACT
+      function toggleTopic(h) {
+        h.parentElement.classList.toggle("open");
+      }
+      function copyF(el) {
+        navigator.clipboard.writeText(el.textContent.trim());
+        el.classList.add("copied");
+        setTimeout(() => el.classList.remove("copied"), 1200);
+      }
     </script>
   </body>
 </html>
