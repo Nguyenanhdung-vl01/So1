@@ -3,423 +3,610 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Physics Lab - Trang chủ</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    <meta
+      name="description"
+      content="Physics Lab - Nền tảng học vật lý tương tác, mô phỏng trực quan & bài tập thông minh."
     />
+    <title>⚛️ Physics Lab | Khám Phá Vật Lý</title>
+    <link rel="stylesheet" href="style.css" />
     <style>
-      :root {
-        --bg-primary: #070a12;
-        --bg-card: rgba(20, 28, 45, 0.65);
-        --text: #e2e8f0;
-        --text2: #94a3b8;
-        --accent: #3b82f6;
-        --border: rgba(255, 255, 255, 0.08);
-        --glass: rgba(255, 255, 255, 0.04);
-        --ease: cubic-bezier(0.25, 0.8, 0.25, 1);
+      /* === INDEX ONLY ENHANCEMENTS === */
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 1.5rem;
       }
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      .hero-badge span {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: 600;
       }
-      body {
-        background: var(--bg-primary);
-        color: var(--text);
-        font-family: "Segoe UI", system-ui, sans-serif;
-        line-height: 1.6;
-        overflow-x: hidden;
-        position: relative;
-        background-image:
-          radial-gradient(
-            circle at 15% 25%,
-            rgba(59, 130, 246, 0.15) 0%,
-            transparent 45%
-          ),
-          radial-gradient(
-            circle at 85% 75%,
-            rgba(139, 92, 246, 0.12) 0%,
-            transparent 45%
-          );
-        background-attachment: fixed;
+      .typewriter {
+        border-right: 3px solid var(--primary);
+        animation: blink 0.8s step-end infinite;
       }
-      body::before {
-        content: "";
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-          from 0deg at 50% 50%,
-          transparent 0deg,
-          rgba(59, 130, 246, 0.05) 60deg,
-          transparent 120deg,
-          rgba(139, 92, 246, 0.05) 180deg,
-          transparent 240deg,
-          rgba(236, 72, 153, 0.05) 300deg,
-          transparent 360deg
-        );
-        animation: spin 30s linear infinite;
-        z-index: -1;
-        pointer-events: none;
-      }
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
+      @keyframes blink {
+        50% {
+          border-color: transparent;
         }
       }
 
-      /* Smooth Page Transition Overlay */
-      .page-transition {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--bg-primary);
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.35s var(--ease);
-      }
-      .page-transition.active {
-        opacity: 1;
-        pointer-events: all;
-      }
-
-      /* Navigation */
-      nav {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 1rem 0;
-        background: var(--glass);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav-container {
-        max-width: 1100px;
-        margin: auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 1.5rem;
-      }
-      .logo {
-        font-size: 1.4rem;
-        font-weight: 700;
-        background: linear-gradient(90deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-decoration: none;
-      }
-      .nav-links {
-        display: flex;
-        gap: 1rem;
-        list-style: none;
-      }
-      .nav-links a {
-        color: var(--text2);
-        text-decoration: none;
-        padding: 0.5rem 0.9rem;
-        border-radius: 8px;
-        transition: all 0.3s var(--ease);
-      }
-      .nav-links a:hover,
-      .nav-links a.active {
-        color: var(--text);
-        background: rgba(255, 255, 255, 0.07);
-      }
-
-      /* Hero */
-      .hero {
-        padding: 8rem 1.5rem 4rem;
-        text-align: center;
-      }
-      .hero h1 {
-        font-size: clamp(1.8rem, 4vw, 3rem);
-        font-weight: 800;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #fff 30%, #60a5fa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: fadeUp 0.6s var(--ease) both;
-      }
-      .hero p {
-        color: var(--text2);
-        max-width: 600px;
-        margin: 0 auto 2rem;
-        font-size: 1.05rem;
-        animation: fadeUp 0.6s var(--ease) 0.15s both;
-      }
-      .btn-group {
-        display: flex;
-        justify-content: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        animation: fadeUp 0.6s var(--ease) 0.3s both;
-      }
-      .btn {
-        padding: 0.7rem 1.6rem;
-        border-radius: 10px;
-        font-weight: 600;
-        text-decoration: none;
-        transition:
-          transform 0.3s var(--ease),
-          box-shadow 0.3s var(--ease);
-      }
-      .btn:hover {
-        transform: translateY(-3px);
-      }
-      .btn-primary {
-        background: linear-gradient(135deg, var(--accent), #6366f1);
-        color: #fff;
-        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
-      }
-      .btn-outline {
-        border: 1px solid var(--border);
-        color: var(--text);
-        background: var(--glass);
-      }
-      .btn-outline:hover {
-        background: rgba(255, 255, 255, 0.08);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-      }
-
-      /* Cards */
-      .section {
-        max-width: 1100px;
-        margin: 3rem auto 0;
-        padding: 0 1.5rem;
-      }
-      .section h2 {
-        text-align: center;
-        margin-bottom: 2rem;
-        font-size: 1.8rem;
-      }
-      .card-grid {
+      /* STATS COUNTER */
+      .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1.5rem;
+        margin: 3rem auto;
+        max-width: 900px;
+        text-align: center;
       }
-      .card {
-        background: var(--bg-card);
+      .stat-item {
+        background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: 14px;
-        padding: 1.8rem;
-        text-decoration: none;
-        color: var(--text);
-        backdrop-filter: blur(8px);
-        position: relative;
-        overflow: hidden;
-        transition:
-          transform 0.35s var(--ease),
-          box-shadow 0.35s var(--ease),
-          border-color 0.35s var(--ease);
+        padding: 1.5rem;
+        border-radius: 16px;
+        transition: 0.3s;
       }
-      .card::before {
+      .stat-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      }
+      .stat-num {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .stat-label {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-top: 0.3rem;
+      }
+
+      /* ROADMAP */
+      .roadmap {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: 700px;
+        margin: 3rem auto;
+        position: relative;
+      }
+      .roadmap::before {
         content: "";
         position: absolute;
+        left: 24px;
         top: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, var(--accent), #a78bfa, #ec4899);
-        opacity: 0;
-        transition: opacity 0.35s var(--ease);
+        bottom: 0;
+        width: 2px;
+        background: var(--border);
       }
-      .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
-        border-color: rgba(255, 255, 255, 0.15);
+      .roadmap-step {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: 0.3s;
+        position: relative;
       }
-      .card:hover::before {
-        opacity: 1;
+      .roadmap-step:hover {
+        background: var(--surface-hover);
+        transform: translateX(8px);
       }
-      .card-icon {
-        font-size: 2rem;
-        margin-bottom: 0.8rem;
-        display: inline-block;
-        background: linear-gradient(135deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+      .roadmap-step::before {
+        content: "";
+        position: absolute;
+        left: -32px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 12px;
+        height: 12px;
+        background: var(--primary);
+        border-radius: 50%;
+        border: 3px solid var(--bg);
+        transition: 0.3s;
       }
-      .card h3 {
-        margin: 0.5rem 0;
-        font-size: 1.2rem;
+      .roadmap-step.active::before {
+        background: var(--success);
+        transform: translateY(-50%) scale(1.3);
       }
-      .card p {
-        color: var(--text2);
-        font-size: 0.92rem;
-        margin: 0;
+      .step-icon {
+        font-size: 1.8rem;
+        background: var(--surface);
+        padding: 0.8rem;
+        border-radius: 12px;
       }
-
-      /* Footer */
-      footer {
-        text-align: center;
-        margin-top: 4rem;
-        padding: 2rem;
-        color: var(--text2);
+      .step-content h3 {
+        margin-bottom: 0.3rem;
+      }
+      .step-content p {
+        color: var(--muted);
         font-size: 0.9rem;
-        border-top: 1px solid var(--border);
       }
 
-      /* Animations */
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
+      /* MAGNETIC BUTTONS */
+      .magnetic {
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+      .magnetic::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.2),
+          transparent 60%
+        );
+        transform: translateX(-100%);
+        transition: 0.6s;
+      }
+      .magnetic:hover::after {
+        transform: translateX(0%);
+      }
+      .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple-anim 0.6s ease-out;
+        pointer-events: none;
+      }
+      @keyframes ripple-anim {
         to {
-          opacity: 1;
-          transform: translateY(0);
+          transform: scale(4);
+          opacity: 0;
         }
-      }
-      .fade-in {
-        opacity: 0;
-        transform: translateY(15px);
-        transition:
-          opacity 0.5s var(--ease),
-          transform 0.5s var(--ease);
-      }
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
       }
 
+      /* MOBILE NAV */
+      .nav-toggle {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
       @media (max-width: 768px) {
-        .hero {
-          padding: 7rem 1rem 3rem;
+        .nav-toggle {
+          display: block;
         }
-        .card-grid {
-          grid-template-columns: 1fr;
-        }
-        .btn-group {
+        .nav-links {
+          position: fixed;
+          top: 70px;
+          right: -100%;
+          width: 260px;
+          height: calc(100vh - 70px);
+          background: var(--bg);
+          border-left: 1px solid var(--border);
+          padding: 2rem 1.5rem;
           flex-direction: column;
-          align-items: center;
+          transition: 0.4s var(--ease);
+          z-index: 99;
         }
-        .btn {
-          width: 100%;
-          max-width: 280px;
-          text-align: center;
+        .nav-links.open {
+          right: 0;
         }
+        .nav-links a {
+          padding: 1rem 0;
+          border-bottom: 1px solid var(--border);
+        }
+      }
+
+      /* CONTINUE BANNER */
+      .continue-banner {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(120%);
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.8rem 1.2rem;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        z-index: 90;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        transition: 0.5s var(--ease);
+      }
+      .continue-banner.show {
+        transform: translateX(-50%) translateY(0);
+      }
+      .continue-banner button {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      .continue-banner button:hover {
+        background: var(--secondary);
       }
     </style>
   </head>
   <body>
-    <div class="page-transition"></div>
+    <div id="loader"><div class="spinner"></div></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <canvas id="particles"></canvas>
 
-    <nav>
-      <div class="nav-container">
-        <a href="index.html" class="logo"
-          ><i class="fa-solid fa-atom me-1"></i> Physics Lab</a
+    <nav id="navbar">
+      <div class="nav-wrap">
+        <a href="index.html" class="logo">⚛️ <span>Physics Lab</span></a>
+        <button
+          class="nav-toggle"
+          onclick="
+            document.querySelector('.nav-links').classList.toggle('open')
+          "
         >
+          ☰
+        </button>
         <ul class="nav-links">
-          <li>
-            <a href="index.html" class="active"
-              ><i class="fa-solid fa-house me-1"></i>Trang chủ</a
-            >
-          </li>
-          <li>
-            <a href="Kienthuc.html"
-              ><i class="fa-solid fa-book-open me-1"></i>Kiến thức</a
-            >
-          </li>
-          <li>
-            <a href="Baitap.html"
-              ><i class="fa-solid fa-pen-to-square me-1"></i>Bài tập</a
-            >
-          </li>
-          <li>
-            <a href="Mophong.html"
-              ><i class="fa-solid fa-microchip me-1"></i>Mô phỏng</a
-            >
-          </li>
+          <li><a href="index.html" class="active">Trang chủ</a></li>
+          <li><a href="Kienthuc.html">Kiến thức</a></li>
+          <li><a href="Baitap.html">Bài tập</a></li>
+          <li><a href="Mophong.html">Mô phỏng</a></li>
         </ul>
       </div>
     </nav>
 
-    <header class="hero">
-      <h1>🌏 Physics - Vật lý hay!</h1>
-      <p>
-        Khám phá lý thuyết, luyện tập bài tập & tương tác mô phỏng trực quan.
-        Hành trình chinh phục vật lý bắt đầu từ đây.
-      </p>
-      <div class="btn-group">
-        <a href="Kienthuc.html" class="btn btn-primary"
-          ><i class="fa-solid fa-rocket me-2"></i>Bắt đầu học</a
-        >
-        <a href="Mophong.html" class="btn btn-outline"
-          ><i class="fa-solid fa-flask me-2"></i>Xem mô phỏng</a
-        >
-      </div>
-    </header>
-
-    <main class="section">
-      <h2>Bạn muốn bắt đầu từ đâu?</h2>
-      <div class="card-grid">
-        <a href="Kienthuc.html" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-lightbulb"></i></div>
-          <h3>Kiến thức</h3>
-          <p>Định luật, công thức, ví dụ minh họa chi tiết.</p>
-        </a>
-        <a href="Baitap.html" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-dumbbell"></i></div>
-          <h3>Bài tập</h3>
-          <p>Tự luyện, kiểm tra đáp án & theo dõi tiến độ.</p>
-        </a>
-        <a href="Mophong.html" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-vr-cardboard"></i></div>
-          <h3>Mô phỏng</h3>
-          <p>Thí nghiệm ảo, quan sát hiện tượng trực quan.</p>
-        </a>
-      </div>
-      <div
-        style="
-          text-align: center;
-          margin-top: 2.5rem;
-          padding: 1.5rem;
-          border-radius: 12px;
-          background: var(--glass);
-          border: 1px solid var(--border);
-        "
-        class="fade-in"
-      >
-        <p style="margin: 0; color: var(--text2)">
-          Vật lý là một hành trình, không phải đích đến. Cố gắng từng ngày, bạn
-          sẽ tiến bộ! 🌟
+    <main>
+      <section class="hero">
+        <div class="hero-badge">
+          🚀 <span>Phiên bản 2.0</span> | Trải nghiệm học vật lý chuẩn 2026
+        </div>
+        <h1>
+          🌏 Vật Lý Không Khó, <br /><span
+            class="typewriter"
+            id="typewriter"
+          ></span>
+        </h1>
+        <p>
+          Hệ thống tương tác đa chiều: Lý thuyết cô đọng • Bài tập thông minh •
+          Mô phỏng real-time. Biến công thức thành phản xạ.
         </p>
-      </div>
+        <div
+          style="
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 2rem;
+          "
+        >
+          <a href="Kienthuc.html" class="btn btn-primary magnetic"
+            >📖 Bắt đầu học</a
+          >
+          <a href="Mophong.html" class="btn btn-secondary magnetic"
+            >🔬 Mở Lab ảo</a
+          >
+        </div>
+      </section>
+
+      <section class="container reveal">
+        <div class="stats-grid" id="stats">
+          <div class="stat-item" data-target="12450">
+            <div class="stat-num" data-count="0">0</div>
+            <div class="stat-label">👨‍🎓 Người học</div>
+          </div>
+          <div class="stat-item" data-target="840">
+            <div class="stat-num" data-count="0">0</div>
+            <div class="stat-label">📝 Bài tập</div>
+          </div>
+          <div class="stat-item" data-target="100">
+            <div class="stat-num" data-count="0">0</div>
+            <div class="stat-label">💯 % Miễn phí</div>
+          </div>
+          <div class="stat-item" data-target="24">
+            <div class="stat-num" data-count="0">0</div>
+            <div class="stat-label">🌐 Chủ đề</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container reveal">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 0.5rem">
+          🗺️ Lộ trình chinh phục
+        </h2>
+        <p style="text-align: center; color: var(--muted); margin-bottom: 2rem">
+          Nhấn vào bước để xem chi tiết. Học đúng trình tự, tiến bộ gấp 3 lần.
+        </p>
+        <div class="roadmap">
+          <div class="roadmap-step active" onclick="highlightStep(this)">
+            <div class="step-icon">📖</div>
+            <div class="step-content">
+              <h3>1. Nắm vững lý thuyết</h3>
+              <p>
+                Công thức chuẩn, ví dụ minh họa, mẹo giải nhanh & lưu ý sai lầm
+                phổ biến.
+              </p>
+            </div>
+          </div>
+          <div class="roadmap-step" onclick="highlightStep(this)">
+            <div class="step-icon">🎯</div>
+            <div class="step-content">
+              <h3>2. Luyện tập phân loại</h3>
+              <p>
+                Từ nhận biết đến vận dụng cao. Chấm điểm tức thì & gợi ý giải
+                thích chi tiết.
+              </p>
+            </div>
+          </div>
+          <div class="roadmap-step" onclick="highlightStep(this)">
+            <div class="step-icon">🧪</div>
+            <div class="step-content">
+              <h3>3. Thực hành mô phỏng</h3>
+              <p>
+                Thay đổi thông số, quan sát vector & đồ thị thời gian thực. Hiểu
+                sâu bản chất hiện tượng.
+              </p>
+            </div>
+          </div>
+          <div class="roadmap-step" onclick="highlightStep(this)">
+            <div class="step-icon">🏆</div>
+            <div class="step-content">
+              <h3>4. Kiểm tra & Tối ưu</h3>
+              <p>
+                Đề thi thử áp lực cao, phân tích điểm mạnh/yếu, lộ trình cá nhân
+                hóa.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="container reveal" style="margin-top: 4rem">
+        <h2 style="text-align: center; font-size: 2rem; margin-bottom: 0.5rem">
+          🧭 Chọn công cụ của bạn
+        </h2>
+        <p style="text-align: center; color: var(--muted); margin-bottom: 2rem">
+          Mỗi module được thiết kế để bổ trợ cho nhau. Kết hợp chúng để đạt hiệu
+          quả tối đa.
+        </p>
+        <div class="grid">
+          <a href="Kienthuc.html" class="card tilt"
+            ><span class="shine"></span>
+            <div class="card-icon">📚</div>
+            <h3>Kiến thức chuẩn</h3>
+            <p>Công thức, định luật, ví dụ minh họa & mẹo giải nhanh.</p></a
+          >
+          <a href="Baitap.html" class="card tilt"
+            ><span class="shine"></span>
+            <div class="card-icon">🎯</div>
+            <h3>Bài tập phân loại</h3>
+            <p>
+              Từ cơ bản đến nâng cao. Chấm điểm tự động & giải thích chi tiết.
+            </p></a
+          >
+          <a href="Mophong.html" class="card tilt"
+            ><span class="shine"></span>
+            <div class="card-icon">🧪</div>
+            <h3>Phòng Lab ảo</h3>
+            <p>
+              Thay đổi thông số, quan sát vector & đồ thị thời gian thực.
+            </p></a
+          >
+        </div>
+      </section>
     </main>
 
-    <footer>&copy; 2026 Physics Lab | Tự học & Tiến bộ</footer>
+    <div class="continue-banner" id="continueBanner">
+      <span>👋 Chào bạn! <b id="lastPage">Trang chủ</b></span>
+      <button
+        onclick="
+          window.location.href = document
+            .getElementById('lastPage')
+            .getAttribute('data-href')
+        "
+      >
+        Tiếp tục →
+      </button>
+    </div>
+
+    <footer>
+      © 2026 Physics Lab | Thiết kế cho người tự học 🚀 |
+      <a href="https://github.com" target="_blank">Mã nguồn mở</a>
+    </footer>
 
     <script>
-      // Smooth page transition
-      const transitionOverlay = document.querySelector(".page-transition");
-      document.querySelectorAll('a[href$=".html"]').forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          transitionOverlay.classList.add("active");
-          setTimeout(() => (window.location.href = link.href), 350);
+      // CORE
+      window.addEventListener("load", () =>
+        document.getElementById("loader").classList.add("hidden"),
+      );
+      const dot = document.querySelector(".cursor-dot"),
+        outline = document.querySelector(".cursor-outline");
+      window.addEventListener("mousemove", (e) => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        outline.style.left = e.clientX + "px";
+        outline.style.top = e.clientY + "px";
+      });
+      document
+        .querySelectorAll("a, button, .card, .roadmap-step")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            outline.classList.add("cursor-hover"),
+          );
+          el.addEventListener("mouseleave", () =>
+            outline.classList.remove("cursor-hover"),
+          );
+        });
+
+      // PARTICLES
+      const cvs = document.getElementById("particles"),
+        ctx = cvs.getContext("2d"),
+        particles = [];
+      function resize() {
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      for (let i = 0; i < 50; i++)
+        particles.push({
+          x: Math.random() * cvs.width,
+          y: Math.random() * cvs.height,
+          r: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
+        });
+      function drawBg() {
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        particles.forEach((p) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > cvs.width) p.dx *= -1;
+          if (p.y < 0 || p.y > cvs.height) p.dy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.12)";
+          ctx.fill();
+        });
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+
+      // TYPEWRITER
+      const phrases = [
+        "Chỉ Cần Đúng Cách ✨",
+        "Hãy Để Mô Phỏng Dẫn Lối 🌊",
+        "Biến Lý Thuyết Thành Phản Xạ 🧠",
+      ];
+      let pIdx = 0,
+        cIdx = 0,
+        isDeleting = false;
+      const typeEl = document.getElementById("typewriter");
+      function typeLoop() {
+        const current = phrases[pIdx];
+        typeEl.textContent = current.substring(0, cIdx);
+        cIdx += isDeleting ? -1 : 1;
+        let speed = isDeleting ? 40 : 80;
+        if (!isDeleting && cIdx === current.length) {
+          isDeleting = true;
+          speed = 1500;
+        } else if (isDeleting && cIdx === 0) {
+          isDeleting = false;
+          pIdx = (pIdx + 1) % phrases.length;
+          speed = 400;
+        }
+        setTimeout(typeLoop, speed);
+      }
+      typeLoop();
+
+      // STATS COUNTER
+      const stats = document.getElementById("stats");
+      const counterObs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              document.querySelectorAll(".stat-num").forEach((el) => {
+                const target = +el.closest(".stat-item").dataset.target;
+                let current = 0;
+                const inc = target / 60;
+                const timer = setInterval(() => {
+                  current += inc;
+                  if (current >= target) {
+                    clearInterval(timer);
+                    current = target;
+                  }
+                  el.textContent = Math.floor(current).toLocaleString();
+                }, 20);
+              });
+              counterObs.unobserve(stats);
+            }
+          });
+        },
+        { threshold: 0.5 },
+      );
+      counterObs.observe(stats);
+
+      // ROADMAP HIGHLIGHT
+      function highlightStep(el) {
+        document
+          .querySelectorAll(".roadmap-step")
+          .forEach((s) => s.classList.remove("active"));
+        el.classList.add("active");
+      }
+
+      // MAGNETIC & RIPPLE
+      document.querySelectorAll(".magnetic").forEach((btn) => {
+        btn.addEventListener("mousemove", (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        });
+        btn.addEventListener(
+          "mouseleave",
+          () => (btn.style.transform = "translate(0,0)"),
+        );
+        btn.addEventListener("click", function (e) {
+          const ripple = document.createElement("span");
+          ripple.classList.add("ripple");
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          ripple.style.width = ripple.style.height = size + "px";
+          ripple.style.left = e.clientX - rect.left - size / 2 + "px";
+          ripple.style.top = e.clientY - rect.top - size / 2 + "px";
+          this.appendChild(ripple);
+          setTimeout(() => ripple.remove(), 600);
         });
       });
 
-      // Fade-in on scroll
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-          });
-        },
-        { threshold: 0.15 },
+      // SCROLL REVEAL
+      const obs = new IntersectionObserver(
+        (e) =>
+          e.forEach(
+            (t) => t.isIntersecting && t.target.classList.add("visible"),
+          ),
+        { threshold: 0.1 },
       );
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+
+      // CONTINUE BANNER (LocalStorage)
+      const last = localStorage.getItem("last_visited");
+      if (last && last !== "index.html") {
+        const banner = document.getElementById("continueBanner");
+        const label = document.getElementById("lastPage");
+        const map = {
+          "Kienthuc.html": "Kiến thức",
+          "Baitap.html": "Bài tập",
+          "Mophong.html": "Mô phỏng",
+        };
+        label.textContent = map[last] || last;
+        label.setAttribute("data-href", last);
+        setTimeout(() => banner.classList.add("show"), 1200);
+        setTimeout(() => banner.classList.remove("show"), 7000);
+      }
+      localStorage.setItem("last_visited", "index.html");
+
+      // NAV HIDE/SHOW
+      let lastScroll = 0;
+      window.addEventListener("scroll", () => {
+        const current = window.scrollY;
+        document
+          .getElementById("navbar")
+          .classList.toggle("hide", current > lastScroll && current > 100);
+        lastScroll = current;
+      });
     </script>
   </body>
 </html>
