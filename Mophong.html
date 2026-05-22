@@ -3,387 +3,1046 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mô phỏng - Physics Lab</title>
-
-    <!-- Font Awesome & Google Fonts -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-
+    <title>🔬 Mô Phỏng | Physics Lab</title>
+    <link rel="stylesheet" href="style.css" />
     <style>
-      /* ==========================================
-           CSS: DARK THEME & ANIMATIONS
-        ========================================== */
-      :root {
-        --bg-primary: #070a12;
-        --bg-secondary: #0f1523;
-        --bg-card: rgba(20, 28, 45, 0.65);
-        --text-main: #e2e8f0;
-        --text-muted: #94a3b8;
-        --accent: #3b82f6;
-        --accent-hover: #60a5fa;
-        --border: rgba(255, 255, 255, 0.08);
-        --glass: rgba(255, 255, 255, 0.04);
-        --radius: 16px;
-        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      /* === SIMULATION PAGE SPECIFIC === */
+      .sim-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-top: 8rem;
       }
-
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      .grade-title {
+        font-size: 1.4rem;
+        margin: 1.8rem 0 0.8rem;
+        padding-left: 1rem;
+        border-left: 4px solid var(--primary);
       }
-
-      body {
-        background: var(--bg-primary);
-        color: var(--text-main);
-        font-family: "Inter", system-ui, sans-serif;
-        line-height: 1.6;
-        overflow-x: hidden;
-        background-image:
-          radial-gradient(
-            circle at 15% 25%,
-            rgba(59, 130, 246, 0.15) 0%,
-            transparent 45%
-          ),
-          radial-gradient(
-            circle at 85% 75%,
-            rgba(139, 92, 246, 0.12) 0%,
-            transparent 45%
-          );
-        background-attachment: fixed;
+      .topic-grid {
+        display: grid;
+        gap: 1.2rem;
+        margin-top: 1rem;
       }
-
-      /* Animated Background Mesh */
-      body::before {
-        content: "";
-        position: fixed;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: conic-gradient(
-          from 0deg at 50% 50%,
-          transparent 0deg,
-          rgba(59, 130, 246, 0.05) 60deg,
-          transparent 120deg,
-          rgba(139, 92, 246, 0.05) 180deg,
-          transparent 240deg,
-          rgba(236, 72, 153, 0.05) 300deg,
-          transparent 360deg
-        );
-        animation: rotateBg 30s linear infinite;
-        z-index: -1;
-        pointer-events: none;
-      }
-      @keyframes rotateBg {
-        0% {
-          transform: rotate(0deg);
-        }
-        100% {
-          transform: rotate(360deg);
-        }
-      }
-
-      /* Page Transition Overlay */
-      .page-transition {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--bg-primary);
-        z-index: 9999;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.35s var(--transition);
-      }
-      .page-transition.active {
-        opacity: 1;
-        pointer-events: all;
-      }
-
-      /* Navigation */
-      .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        z-index: 1000;
-        padding: 1rem 0;
-        background: var(--glass);
-        backdrop-filter: blur(14px);
-        border-bottom: 1px solid var(--border);
-      }
-      .nav-container {
-        max-width: 1100px;
-        margin: auto;
+      .topic-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 1.2rem;
+        cursor: pointer;
+        transition: 0.3s;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0 1.5rem;
       }
-      .logo {
-        font-size: 1.4rem;
-        font-weight: 700;
-        text-decoration: none;
-        background: linear-gradient(90deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+      .topic-card:hover {
+        background: var(--surface-hover);
+        transform: translateX(6px);
+        border-color: var(--primary);
       }
-      .nav-links {
-        display: flex;
-        gap: 1rem;
-        list-style: none;
-      }
-      .nav-links a {
-        color: var(--text-muted);
-        text-decoration: none;
-        padding: 0.5rem 0.9rem;
-        border-radius: 8px;
-        transition: var(--transition);
-      }
-      .nav-links a:hover,
-      .nav-links a.active {
-        color: var(--text-main);
-        background: rgba(255, 255, 255, 0.07);
-      }
-
-      /* Main Content */
-      .container {
-        max-width: 1100px;
-        margin: 0 auto;
-        padding: 0 1.5rem;
-      }
-
-      .hero {
-        padding: 8rem 1.5rem 3rem;
-        text-align: center;
-      }
-      .hero h1 {
-        font-size: clamp(1.8rem, 4vw, 2.8rem);
-        font-weight: 800;
-        margin-bottom: 1rem;
-        background: linear-gradient(135deg, #fff 30%, #60a5fa 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .hero p {
-        color: var(--text-muted);
-        max-width: 600px;
-        margin: 0 auto 2rem;
+      .topic-info h3 {
+        margin-bottom: 0.3rem;
         font-size: 1.05rem;
       }
-
-      .card-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 4rem;
+      .topic-info p {
+        color: var(--muted);
+        font-size: 0.85rem;
       }
-      .card {
-        background: var(--bg-card);
+      .badge {
+        background: rgba(59, 130, 246, 0.15);
+        color: var(--primary);
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .sim-workspace {
+        display: none;
+        margin-top: 2rem;
+      }
+      .sim-layout {
+        display: grid;
+        grid-template-columns: 1.4fr 0.6fr;
+        gap: 2rem;
+      }
+      .canvas-box {
+        background: var(--surface);
         border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 2rem;
-        text-decoration: none;
-        color: var(--text-main);
-        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 1rem;
         position: relative;
         overflow: hidden;
-        transition: var(--transition);
       }
-      .card::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
+      #sim-canvas {
         width: 100%;
-        height: 3px;
-        background: linear-gradient(90deg, var(--accent), #a78bfa, #ec4899);
-        opacity: 0;
-        transition: var(--transition);
-      }
-      .card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-        border-color: rgba(255, 255, 255, 0.15);
-      }
-      .card:hover::before {
-        opacity: 1;
-      }
-      .card-icon {
-        font-size: 2rem;
-        margin-bottom: 1rem;
-        display: inline-block;
-        background: linear-gradient(135deg, #60a5fa, #a78bfa);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .card h3 {
-        margin: 0.5rem 0;
-        font-size: 1.2rem;
-      }
-      .card p {
-        color: var(--text-muted);
-        font-size: 0.92rem;
-        margin: 0;
+        height: 380px;
+        display: block;
+        background: radial-gradient(
+          circle at center,
+          rgba(59, 130, 246, 0.06),
+          transparent 70%
+        );
       }
 
-      .info-box {
-        text-align: center;
-        margin-top: 2rem;
-        padding: 1.5rem;
-        border-radius: 12px;
-        background: var(--glass);
+      .ctrl-panel {
+        background: var(--surface);
         border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1.2rem;
+        max-height: 420px;
+        overflow-y: auto;
       }
-      .info-box p {
-        margin: 0;
-        color: var(--text-muted);
-      }
-
-      footer {
-        text-align: center;
-        padding: 2rem;
-        border-top: 1px solid var(--border);
-        color: var(--text-muted);
+      .ctrl-group label {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.4rem;
+        font-weight: 500;
         font-size: 0.9rem;
       }
-
-      /* Fade In Animation */
-      .fade-in {
-        opacity: 0;
-        transform: translateY(15px);
-        transition:
-          opacity 0.5s var(--transition),
-          transform 0.5s var(--transition);
-      }
-      .fade-in.visible {
-        opacity: 1;
-        transform: translateY(0);
+      .ctrl-group input[type="range"] {
+        width: 100%;
+        accent-color: var(--primary);
+        height: 5px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.1);
       }
 
-      @media (max-width: 768px) {
-        .hero {
-          padding: 7rem 1rem 2.5rem;
+      .data-panel {
+        background: rgba(0, 0, 0, 0.25);
+        padding: 1rem;
+        border-radius: 14px;
+        margin-top: 1rem;
+      }
+      .data-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+      }
+      .data-row span {
+        color: var(--muted);
+      }
+      .data-row strong {
+        font-family: monospace;
+        color: #fff;
+      }
+      .formula-box {
+        background: rgba(59, 130, 246, 0.1);
+        padding: 0.8rem;
+        border-radius: 10px;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 0.95rem;
+        text-align: center;
+      }
+
+      .back-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        padding: 0.7rem 1.2rem;
+        border-radius: 10px;
+        color: var(--text);
+        cursor: pointer;
+        transition: 0.3s;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .back-btn:hover {
+        background: var(--surface-hover);
+      }
+
+      @media (max-width: 900px) {
+        .sim-layout {
+          grid-template-columns: 1fr;
         }
-        .nav-links {
-          display: none;
-        }
-        .card-grid {
+        .topic-grid {
           grid-template-columns: 1fr;
         }
       }
     </style>
   </head>
   <body>
-    <div class="page-transition"></div>
+    <div id="loader"><div class="spinner"></div></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+    <canvas id="particles"></canvas>
 
-    <nav class="navbar">
-      <div class="nav-container">
-        <a href="index.html" class="logo"
-          ><i class="fa-solid fa-atom me-1"></i> Physics Lab</a
-        >
+    <nav id="navbar">
+      <div class="nav-wrap">
+        <a href="index.html" class="logo">⚛️ <span>Physics Lab</span></a>
         <ul class="nav-links">
-          <li>
-            <a href="index.html"
-              ><i class="fa-solid fa-house me-1"></i>Trang chủ</a
-            >
-          </li>
-          <li>
-            <a href="Kienthuc.html"
-              ><i class="fa-solid fa-book-open me-1"></i>Kiến thức</a
-            >
-          </li>
-          <li>
-            <a href="Baitap.html"
-              ><i class="fa-solid fa-pen-to-square me-1"></i>Bài tập</a
-            >
-          </li>
-          <li>
-            <a href="Mophong.html" class="active"
-              ><i class="fa-solid fa-microchip me-1"></i>Mô phỏng</a
-            >
-          </li>
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="Kienthuc.html">Kiến thức</a></li>
+          <li><a href="Baitap.html">Bài tập</a></li>
+          <li><a href="Mophong.html" class="active">Mô phỏng</a></li>
         </ul>
       </div>
     </nav>
 
-    <header class="hero">
-      <div class="container">
-        <h1><i class="fa-solid fa-vr-cardboard me-2"></i>Mô phỏng Vật lý</h1>
-        <p>
-          Nơi bạn sẽ tương tác với các mô phỏng vật lý... Mô phỏng là công cụ
-          giúp bạn hiểu sâu hơn về các hiện tượng vật lý. ♻️
-        </p>
-      </div>
-    </header>
-
     <main class="container">
-      <div class="card-grid">
-        <a href="#" class="card fade-in">
-          <div class="card-icon">
-            <i class="fa-solid fa-arrow-down-long"></i>
-          </div>
-          <h3>Rơi tự do & Ném xiên</h3>
-          <p>Thay đổi góc, vận tốc, quan sát quỹ đạo thực tế.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-wave-pulse"></i></div>
-          <h3>Sóng cơ & Âm học</h3>
-          <p>Giao thoa, sóng dừng, họa âm trực quan hóa.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-magnet"></i></div>
-          <h3>Mạch điện & Từ trường</h3>
-          <p>Lắp mạch, đo V/A, quan sát đường sức từ.</p>
-        </a>
-        <a href="#" class="card fade-in">
-          <div class="card-icon"><i class="fa-solid fa-atom"></i></div>
-          <h3>Quang học & Lượng tử</h3>
-          <p>Khúc xạ, giao thoa ánh sáng, hiệu ứng quang điện.</p>
-        </a>
-      </div>
-
-      <div class="info-box fade-in">
-        <p class="fs-5">
-          🚀 Sắp ra mắt: Phòng lab ảo 3D tương tác trực tiếp trên trình duyệt!
+      <!-- TOPIC SELECTION -->
+      <section id="topic-screen" class="sim-header reveal">
+        <h1>🔬 Phòng Thí Nghiệm Ảo</h1>
+        <p style="color: var(--muted); margin-bottom: 2rem">
+          Chọn chủ đề để bắt đầu mô phỏng tương tác. Thay đổi thông số, quan sát
+          hiện tượng & kiểm chứng công thức.
         </p>
-      </div>
+
+        <div class="grade-title" style="border-left-color: var(--primary)">
+          📘 Lớp 10
+        </div>
+        <div class="topic-grid" id="grid-10"></div>
+        <div class="grade-title" style="border-left-color: var(--secondary)">
+          📕 Lớp 11
+        </div>
+        <div class="topic-grid" id="grid-11"></div>
+        <div class="grade-title" style="border-left-color: var(--success)">
+          📗 Lớp 12
+        </div>
+        <div class="topic-grid" id="grid-12"></div>
+      </section>
+
+      <!-- SIMULATION WORKSPACE -->
+      <section id="sim-screen" class="sim-workspace">
+        <button class="back-btn" onclick="closeSim()">
+          ← Quay lại danh sách chủ đề
+        </button>
+        <h2 id="sim-title" style="text-align: center; margin-bottom: 1rem"></h2>
+        <div class="sim-layout">
+          <div class="canvas-box">
+            <canvas id="sim-canvas"></canvas>
+          </div>
+          <div class="ctrl-panel" id="ctrl-panel">
+            <!-- Dynamic controls injected here -->
+          </div>
+        </div>
+        <div
+          class="sim-layout"
+          style="margin-top: 1.5rem; grid-template-columns: 1fr 1fr"
+        >
+          <div class="data-panel" id="data-panel"></div>
+          <div class="formula-box" id="formula-box"></div>
+        </div>
+      </section>
     </main>
 
-    <footer>
-      <p>&copy; 2026 Physics Lab | Tự học & Tiến bộ</p>
-    </footer>
+    <footer>© 2026 Physics Lab | Kéo thả, thay đổi & khám phá 🧪</footer>
 
     <script>
-      // Page Transition Logic
-      const transitionOverlay = document.querySelector(".page-transition");
-      document.querySelectorAll('a[href$=".html"]').forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          transitionOverlay.classList.add("active");
-          setTimeout(() => (window.location.href = link.href), 350);
+      // 🔗 CORE UI (Loader, Cursor, Particles, Nav, Scroll Reveal)
+      window.addEventListener("load", () =>
+        document.getElementById("loader").classList.add("hidden"),
+      );
+      const dot = document.querySelector(".cursor-dot"),
+        outline = document.querySelector(".cursor-outline");
+      window.addEventListener("mousemove", (e) => {
+        dot.style.left = e.clientX + "px";
+        dot.style.top = e.clientY + "px";
+        outline.style.left = e.clientX + "px";
+        outline.style.top = e.clientY + "px";
+      });
+      document.querySelectorAll("a, button, .topic-card").forEach((el) => {
+        el.addEventListener("mouseenter", () =>
+          outline.classList.add("cursor-hover"),
+        );
+        el.addEventListener("mouseleave", () =>
+          outline.classList.remove("cursor-hover"),
+        );
+      });
+      const cvs = document.getElementById("particles"),
+        ctx = cvs.getContext("2d"),
+        particles = [];
+      function resize() {
+        cvs.width = window.innerWidth;
+        cvs.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resize);
+      resize();
+      for (let i = 0; i < 40; i++)
+        particles.push({
+          x: Math.random() * cvs.width,
+          y: Math.random() * cvs.height,
+          r: Math.random() * 2 + 1,
+          dx: (Math.random() - 0.5) * 0.4,
+          dy: (Math.random() - 0.5) * 0.4,
         });
+      function drawBg() {
+        ctx.clearRect(0, 0, cvs.width, cvs.height);
+        particles.forEach((p) => {
+          p.x += p.dx;
+          p.y += p.dy;
+          if (p.x < 0 || p.x > cvs.width) p.dx *= -1;
+          if (p.y < 0 || p.y > cvs.height) p.dy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255,0.12)";
+          ctx.fill();
+        });
+        requestAnimationFrame(drawBg);
+      }
+      drawBg();
+      const obs = new IntersectionObserver(
+        (e) =>
+          e.forEach(
+            (t) => t.isIntersecting && t.target.classList.add("visible"),
+          ),
+        { threshold: 0.1 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+      let lastScroll = 0;
+      window.addEventListener("scroll", () => {
+        document
+          .getElementById("navbar")
+          .classList.toggle(
+            "hide",
+            window.scrollY > lastScroll && window.scrollY > 100,
+          );
+        lastScroll = window.scrollY;
       });
 
-      // Fade In on Scroll
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) entry.target.classList.add("visible");
-          });
+      // 📚 TOPIC CONFIG
+      const topics = {
+        "10-dong-hoc": {
+          name: "Động học: Ném xiên",
+          grade: "10",
+          controls: [
+            { id: "v0", label: "Vận tốc đầu (v₀)", min: 5, max: 50, val: 20 },
+            { id: "angle", label: "Góc ném (θ)", min: 10, max: 80, val: 45 },
+          ],
         },
-        { threshold: 0.15 },
-      );
-      document
-        .querySelectorAll(".fade-in")
-        .forEach((el) => observer.observe(el));
+        "10-dong-luc-hoc": {
+          name: "Động lực học: F=ma",
+          grade: "10",
+          controls: [
+            { id: "F", label: "Lực tác dụng (F)", min: 10, max: 200, val: 50 },
+            { id: "m", label: "Khối lượng (m)", min: 1, max: 50, val: 10 },
+          ],
+        },
+        "10-nang-luong": {
+          name: "Năng lượng: Bảo toàn cơ năng",
+          grade: "10",
+          controls: [
+            { id: "h", label: "Độ cao (h)", min: 20, max: 200, val: 100 },
+            { id: "g", label: "Trọng trường (g)", min: 1, max: 20, val: 9.8 },
+          ],
+        },
+        "10-dong-luong": {
+          name: "Động lượng: Va chạm đàn hồi",
+          grade: "10",
+          controls: [
+            { id: "m1", label: "Khối lượng m₁", min: 1, max: 20, val: 5 },
+            { id: "m2", label: "Khối lượng m₂", min: 1, max: 20, val: 10 },
+            { id: "v1", label: "Vận tốc v₁", min: 1, max: 30, val: 15 },
+          ],
+        },
+        "10-chuyen-dong-tron": {
+          name: "Chuyển động tròn đều",
+          grade: "10",
+          controls: [
+            { id: "r", label: "Bán kính (r)", min: 30, max: 150, val: 80 },
+            { id: "v", label: "Tốc độ (v)", min: 1, max: 15, val: 5 },
+          ],
+        },
+        "10-bien-dang-ap-suat": {
+          name: "Biến dạng: Định luật Hooke",
+          grade: "10",
+          controls: [
+            { id: "F", label: "Lực kéo (F)", min: 5, max: 100, val: 30 },
+            {
+              id: "k",
+              label: "Độ cứng lò xo (k)",
+              min: 10,
+              max: 500,
+              val: 100,
+            },
+          ],
+        },
+        "11-dao-dong-song": {
+          name: "Sóng: Giao thoa 2 nguồn",
+          grade: "11",
+          controls: [
+            {
+              id: "d",
+              label: "Khoảng cách nguồn",
+              min: 50,
+              max: 300,
+              val: 120,
+            },
+            { id: "f", label: "Tần số (f)", min: 1, max: 10, val: 3 },
+          ],
+        },
+        "11-dien-truong": {
+          name: "Điện trường: Đường sức",
+          grade: "11",
+          controls: [
+            { id: "q1", label: "Điện tích q₁ (μC)", min: -5, max: 5, val: 3 },
+            { id: "q2", label: "Điện tích q₂ (μC)", min: -5, max: 5, val: -2 },
+          ],
+        },
+        "11-dong-dien": {
+          name: "Dòng điện: Định luật Ohm",
+          grade: "11",
+          controls: [
+            { id: "U", label: "Hiệu điện thế (U)", min: 1, max: 24, val: 12 },
+            { id: "R", label: "Điện trở (R)", min: 10, max: 200, val: 50 },
+          ],
+        },
+        "12-vat-ly-nhiet": {
+          name: "Nhiệt: Truyền nhiệt cân bằng",
+          grade: "12",
+          controls: [
+            {
+              id: "T1",
+              label: "Nhiệt độ vật 1 (°C)",
+              min: 10,
+              max: 100,
+              val: 80,
+            },
+            {
+              id: "T2",
+              label: "Nhiệt độ vật 2 (°C)",
+              min: 10,
+              max: 100,
+              val: 30,
+            },
+          ],
+        },
+        "12-khi-ly-tuong": {
+          name: "Khí lý tưởng: pV=nRT",
+          grade: "12",
+          controls: [
+            { id: "V", label: "Thể tích (V)", min: 0.5, max: 5, val: 2 },
+            { id: "T", label: "Nhiệt độ (T K)", min: 200, max: 600, val: 300 },
+          ],
+        },
+        "12-tu-truong": {
+          name: "Từ trường: Dây dẫn thẳng",
+          grade: "12",
+          controls: [
+            { id: "I", label: "Cường độ dòng (I)", min: 1, max: 20, val: 8 },
+            { id: "r", label: "Khoảng cách (r cm)", min: 2, max: 20, val: 5 },
+          ],
+        },
+        "12-vat-ly-hat-nhan": {
+          name: "Hạt nhân: Phóng xạ & Chu kỳ bán rã",
+          grade: "12",
+          controls: [
+            {
+              id: "N0",
+              label: "Số hạt ban đầu",
+              min: 100,
+              max: 1000,
+              val: 500,
+            },
+            { id: "T", label: "Chu kỳ bán rã (s)", min: 1, max: 10, val: 3 },
+          ],
+        },
+      };
+
+      // 🖥️ RENDER TOPIC GRID
+      function renderTopics() {
+        ["10", "11", "12"].forEach((g) => {
+          const grid = document.getElementById(`grid-${g}`);
+          grid.innerHTML = "";
+          Object.entries(topics).forEach(([key, data]) => {
+            if (data.grade === g) {
+              const card = document.createElement("div");
+              card.className = "topic-card";
+              card.innerHTML = `<div class="topic-info"><h3>${data.name}</h3><p>Canvas tương tác • Realtime</p></div><span class="badge">Mở →</span>`;
+              card.onclick = () => openSim(key);
+              grid.appendChild(card);
+            }
+          });
+        });
+      }
+
+      // 🔬 SIMULATION ENGINE
+      const simCanvas = document.getElementById("sim-canvas");
+      const simCtx = simCanvas.getContext("2d");
+      let currentSim = null,
+        simAnim = null,
+        params = {};
+
+      function openSim(key) {
+        currentSim = key;
+        const cfg = topics[key];
+        document.getElementById("topic-screen").style.display = "none";
+        document.getElementById("sim-screen").style.display = "block";
+        document.getElementById("sim-title").textContent = cfg.name;
+        resizeCanvas();
+        renderControls(cfg);
+        resetParams(cfg);
+        updateDisplay();
+        startLoop();
+      }
+
+      function closeSim() {
+        if (simAnim) cancelAnimationFrame(simAnim);
+        currentSim = null;
+        document.getElementById("sim-screen").style.display = "none";
+        document.getElementById("topic-screen").style.display = "block";
+      }
+
+      function resizeCanvas() {
+        const box = simCanvas.parentElement;
+        simCanvas.width = box.clientWidth;
+        simCanvas.height = 380;
+      }
+      window.addEventListener("resize", () => {
+        if (currentSim) resizeCanvas();
+      });
+
+      function renderControls(cfg) {
+        const panel = document.getElementById("ctrl-panel");
+        panel.innerHTML = "";
+        cfg.controls.forEach((c) => {
+          const group = document.createElement("div");
+          group.className = "ctrl-group";
+          group.innerHTML = `<label><span>${c.label}</span><span id="val-${c.id}">${c.val}</span></label><input type="range" id="ctrl-${c.id}" min="${c.min}" max="${c.max}" step="${c.max - c.min > 10 ? 1 : 0.1}" value="${c.val}">`;
+          panel.appendChild(group);
+          document.getElementById(`ctrl-${c.id}`).oninput = function () {
+            document.getElementById(`val-${c.id}`).textContent = this.value;
+            params[c.id] = parseFloat(this.value);
+            updateDisplay();
+          };
+        });
+      }
+
+      function resetParams(cfg) {
+        cfg.controls.forEach((c) => (params[c.id] = c.val));
+      }
+
+      function updateDisplay() {
+        const p = params;
+        let dataHTML = "",
+          formula = "";
+        switch (currentSim) {
+          case "10-dong-hoc": {
+            const v0 = p.v0,
+              th = (p.angle * Math.PI) / 180,
+              g = 9.8;
+            const R = (v0 * v0 * Math.sin(2 * th)) / g,
+              H = (v0 * v0 * Math.sin(th) ** 2) / (2 * g);
+            dataHTML =
+              row("Tầm xa R", R.toFixed(1) + "m") +
+              row("Độ cao H", H.toFixed(1) + "m");
+            formula = `R = v₀²sin(2θ)/g | H = v₀²sin²θ/(2g)`;
+            break;
+          }
+          case "10-dong-luc-hoc": {
+            const a = p.F / p.m;
+            dataHTML =
+              row("Gia tốc a", a.toFixed(2) + "m/s²") +
+              row("Lực F", p.F + "N") +
+              row("Khối lượng m", p.m + "kg");
+            formula = `a = F/m | F = m·a`;
+            break;
+          }
+          case "10-nang-luong": {
+            const m = 1,
+              g = p.g,
+              h = p.h / 100;
+            const Wt = m * g * h,
+              Wd = 0,
+              W = Wt;
+            dataHTML =
+              row("Thế năng Wt", Wt.toFixed(1) + "J") +
+              row("Động năng Wđ", Wd.toFixed(1) + "J") +
+              row("Cơ năng W", W.toFixed(1) + "J");
+            formula = `W = Wt + Wđ = mgh + ½mv²`;
+            break;
+          }
+          case "10-dong-luong": {
+            const v1 = p.v1,
+              m1 = p.m1,
+              m2 = p.m2,
+              p1 = m1 * v1,
+              p2 = 0,
+              pt = p1 + p2;
+            dataHTML =
+              row("Động lượng ban đầu", pt.toFixed(1) + "kg·m/s") +
+              row("v₁", v1 + "m/s") +
+              row("v₂", "0 m/s");
+            formula = `Σp_trước = Σp_sau | m₁v₁ + m₂v₂ = const`;
+            break;
+          }
+          case "10-chuyen-dong-tron": {
+            const w = (p.v / p.r) * 10,
+              ah = (p.v ** 2 / p.r) * 10;
+            dataHTML =
+              row("Tốc độ góc ω", w.toFixed(2) + "rad/s") +
+              row("a_ht", ah.toFixed(2) + "m/s²") +
+              row("Chu kỳ T", ((2 * Math.PI) / w).toFixed(2) + "s");
+            formula = `ω = v/r | a_ht = v²/r = ω²r`;
+            break;
+          }
+          case "10-bien-dang-ap-suat": {
+            const dx = p.F / p.k;
+            dataHTML =
+              row("Độ giãn Δl", dx.toFixed(2) + "m") +
+              row("Lực F", p.F + "N") +
+              row("Độ cứng k", p.k + "N/m");
+            formula = `F_đh = k·|Δl| | Δl = F/k`;
+            break;
+          }
+          case "11-dao-dong-song": {
+            const v = 10,
+              f = p.f,
+              lam = v / f,
+              d = p.d / 10;
+            dataHTML =
+              row("Bước sóng λ", lam.toFixed(2) + "m") +
+              row("Tốc độ v", v + "m/s") +
+              row("Tần số f", f + "Hz");
+            formula = `λ = v/f | Δd = kλ (cực đại)`;
+            break;
+          }
+          case "11-dien-truong": {
+            dataHTML =
+              row("q₁", p.q1 + "μC") +
+              row("q₂", p.q2 + "μC") +
+              row("E tổng", "Vẽ đường sức");
+            formula = `E = k|q|/r² | Đường sức: (+) → (-)`;
+            break;
+          }
+          case "11-dong-dien": {
+            const I = p.U / p.R;
+            dataHTML =
+              row("Cường độ I", I.toFixed(3) + "A") +
+              row("U", p.U + "V") +
+              row("R", p.R + "Ω");
+            formula = `I = U/R | P = U·I = I²R`;
+            break;
+          }
+          case "12-vat-ly-nhiet": {
+            const Tf = (p.T1 + p.T2) / 2;
+            dataHTML =
+              row("Nhiệt độ cân bằng", Tf.toFixed(1) + "°C") +
+              row("Q tỏa", "Tính tự động") +
+              row("Q thu", "Tính tự động");
+            formula = `Q_thu = Q_tỏa | mc|Δt| = mc|Δt|`;
+            break;
+          }
+          case "12-khi-ly-tuong": {
+            const P = (1 * 0.082 * p.T) / p.V;
+            dataHTML =
+              row("Áp suất p", P.toFixed(2) + "atm") +
+              row("V", p.V + "L") +
+              row("T", p.T + "K");
+            formula = `pV = nRT | p₁V₁/T₁ = p₂V₂/T₂`;
+            break;
+          }
+          case "12-tu-truong": {
+            const B = (2e-7 * p.I) / (p.r / 100);
+            dataHTML =
+              row("Cảm ứng từ B", (B * 1e6).toFixed(2) + "μT") +
+              row("I", p.I + "A") +
+              row("r", p.r + "cm");
+            formula = `B = μ₀I/(2πr) | μ₀ = 4π·10⁻⁷`;
+            break;
+          }
+          case "12-vat-ly-hat-nhan": {
+            const N = p.N0 * Math.pow(0.5, 3 / p.T);
+            dataHTML =
+              row("Số hạt còn lại", N.toFixed(0)) +
+              row("N₀", p.N0) +
+              row("T", p.T + "s");
+            formula = `N = N₀·2^(-t/T) | T = ln2/λ`;
+            break;
+          }
+        }
+        document.getElementById("data-panel").innerHTML = dataHTML;
+        document.getElementById("formula-box").textContent = formula;
+      }
+      function row(l, v) {
+        return `<div class="data-row"><span>${l}</span><strong>${v}</strong></div>`;
+      }
+
+      // 🎨 DRAW LOOP
+      let t = 0;
+      function startLoop() {
+        t = 0;
+        function loop() {
+          simCtx.clearRect(0, 0, simCanvas.width, simCanvas.height);
+          const W = simCanvas.width,
+            H = simCanvas.height;
+          drawGrid(simCtx, W, H);
+          drawSim(simCtx, W, H, params, t);
+          t += 0.016;
+          simAnim = requestAnimationFrame(loop);
+        }
+        loop();
+      }
+
+      function drawGrid(ctx, W, H) {
+        ctx.strokeStyle = "rgba(255,255,255,0.05)";
+        ctx.lineWidth = 1;
+        for (let x = 0; x < W; x += 40) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, H);
+          ctx.stroke();
+        }
+        for (let y = 0; y < H; y += 40) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(W, y);
+          ctx.stroke();
+        }
+      }
+
+      function drawSim(ctx, W, H, p, time) {
+        const cx = W / 2,
+          cy = H / 2;
+        ctx.save();
+        switch (currentSim) {
+          case "10-dong-hoc": {
+            const v0 = p.v0,
+              th = (p.angle * Math.PI) / 180,
+              g = 9.8;
+            const vx = v0 * Math.cos(th),
+              vy = v0 * Math.sin(th);
+            const scale = 3;
+            const px = vx * time * scale + 40;
+            const py = H - (vy * time - 0.5 * g * time * time) * scale - 20;
+            // Trajectory
+            ctx.beginPath();
+            ctx.strokeStyle = "rgba(59,130,246,0.6)";
+            ctx.lineWidth = 2;
+            for (let i = 0; i < time + 0.1; i += 0.05) {
+              const tx = vx * i * scale + 40,
+                ty = H - (vy * i - 0.5 * g * i * i) * scale - 20;
+              i === 0 ? ctx.moveTo(tx, ty) : ctx.lineTo(tx, ty);
+            }
+            ctx.stroke();
+            // Ball
+            ctx.beginPath();
+            ctx.arc(px, py, 8, 0, Math.PI * 2);
+            ctx.fillStyle = "#60a5fa";
+            ctx.fill();
+            // Vector v
+            drawVec(ctx, px, py, vx * 3, -vy * 3, "#10b981");
+            break;
+          }
+          case "10-dong-luc-hoc": {
+            const a = p.F / p.m;
+            const x = 0.5 * a * time * time * 10 + 50;
+            ctx.beginPath();
+            ctx.arc(x, cy, 15, 0, Math.PI * 2);
+            ctx.fillStyle = "#8b5cf6";
+            ctx.fill();
+            ctx.beginPath();
+            ctx.moveTo(20, cy);
+            ctx.lineTo(x - 20, cy);
+            ctx.strokeStyle = "#ec4899";
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            drawVec(ctx, x, cy, a * 10, 0, "#ef4444");
+            break;
+          }
+          case "10-nang-luong": {
+            const h = p.h,
+              g = p.g,
+              v = Math.sqrt(((2 * g * h) / 100) * time);
+            const y = H - 40 - (h / 100) * (H - 80);
+            ctx.fillStyle = "#fbbf24";
+            ctx.fillRect(cx - 20, y, 40, 40);
+            ctx.fillStyle = "#10b981";
+            ctx.fillRect(cx - 25, cy + 40, 50, 10); // Ground
+            drawVec(ctx, cx, y + 20, 0, v * 2, "#ef4444");
+            break;
+          }
+          case "10-dong-luong": {
+            const m1 = p.m1,
+              m2 = p.m2,
+              v1 = p.v1;
+            const x1 = 50 + v1 * time * 5;
+            const x2 = W - 50;
+            const r1 = 10 + m1,
+              r2 = 10 + m2;
+            if (x1 + r1 >= x2 - r2 && time < 2) {
+              // Simple elastic collision
+              const v1p = ((m1 - m2) * v1) / (m1 + m2),
+                v2p = (2 * m1 * v1) / (m1 + m2);
+              const tx1 = x2 - r2 + v1p * (time - 2) * 5;
+              const tx2 = x2 - r2 + v2p * (time - 2) * 5;
+              drawVec(ctx, tx1, cy, v1p * 3, 0, "#10b981");
+              drawVec(ctx, tx2, cy, v2p * 3, 0, "#3b82f6");
+              ctx.beginPath();
+              ctx.arc(tx1, cy, r1, 0, Math.PI * 2);
+              ctx.fillStyle = "#8b5cf6";
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(tx2, cy, r2, 0, Math.PI * 2);
+              ctx.fillStyle = "#ec4899";
+              ctx.fill();
+            } else {
+              ctx.beginPath();
+              ctx.arc(x1, cy, r1, 0, Math.PI * 2);
+              ctx.fillStyle = "#8b5cf6";
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc(x2, cy, r2, 0, Math.PI * 2);
+              ctx.fillStyle = "#ec4899";
+              ctx.fill();
+              drawVec(ctx, x1, cy, v1 * 3, 0, "#10b981");
+            }
+            break;
+          }
+          case "10-chuyen-dong-tron": {
+            const r = p.r,
+              v = p.v,
+              w = v / (r / 10);
+            const angle = w * time;
+            const bx = cx + r * Math.cos(angle);
+            const by = cy + r * Math.sin(angle);
+            ctx.beginPath();
+            ctx.arc(cx, cy, r, 0, Math.PI * 2);
+            ctx.strokeStyle = "rgba(255,255,255,0.2)";
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(bx, by, 8, 0, Math.PI * 2);
+            ctx.fillStyle = "#60a5fa";
+            ctx.fill();
+            drawVec(
+              ctx,
+              bx,
+              by,
+              -v * 2 * Math.sin(angle),
+              v * 2 * Math.cos(angle),
+              "#10b981",
+            ); // v
+            drawVec(
+              ctx,
+              bx,
+              by,
+              (-r / 5) * Math.cos(angle),
+              (-r / 5) * Math.sin(angle),
+              "#ef4444",
+            ); // a_ht
+            break;
+          }
+          case "10-bien-dang-ap-suat": {
+            const F = p.F,
+              k = p.k,
+              dx = (F / k) * 20;
+            const x = 40 + dx;
+            // Spring
+            ctx.beginPath();
+            ctx.moveTo(20, cy);
+            for (let i = 0; i < 12; i++) {
+              const sx = 20 + ((x - 20) * (i + 0.5)) / 12;
+              const sy = cy + (i % 2 === 0 ? -8 : 8);
+              ctx.lineTo(sx, sy);
+            }
+            ctx.strokeStyle = "#a78bfa";
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(x, cy, 10, 0, Math.PI * 2);
+            ctx.fillStyle = "#ec4899";
+            ctx.fill();
+            drawVec(ctx, x, cy, F / 5, 0, "#10b981");
+            break;
+          }
+          case "11-dao-dong-song": {
+            const d = p.d,
+              f = p.f,
+              v = 10,
+              lam = v / f;
+            const s1x = cx - d / 2,
+              s2x = cx + d / 2;
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(s1x, cy, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.beginPath();
+            ctx.arc(s2x, cy, 5, 0, Math.PI * 2);
+            ctx.fill();
+            // Wave circles
+            ctx.strokeStyle = "rgba(59,130,246,0.4)";
+            ctx.lineWidth = 1;
+            for (let r = 0; r < W; r += 20) {
+              const phase = (time * f * 2 * Math.PI) % (2 * Math.PI);
+              ctx.beginPath();
+              ctx.arc(s1x, cy, r, 0, Math.PI * 2);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.arc(s2x, cy, r, 0, Math.PI * 2);
+              ctx.stroke();
+            }
+            break;
+          }
+          case "11-dien-truong": {
+            const q1 = p.q1,
+              q2 = p.q2;
+            const x1 = cx - 40,
+              x2 = cx + 40;
+            ctx.fillStyle = q1 > 0 ? "#ef4444" : "#3b82f6";
+            ctx.beginPath();
+            ctx.arc(x1, cy, 12, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = q2 > 0 ? "#ef4444" : "#3b82f6";
+            ctx.beginPath();
+            ctx.arc(x2, cy, 12, 0, Math.PI * 2);
+            ctx.fill();
+            // Field lines (simplified radial)
+            for (let a = 0; a < Math.PI * 2; a += 0.3) {
+              ctx.beginPath();
+              ctx.moveTo(x1 + 12 * Math.cos(a), cy + 12 * Math.sin(a));
+              ctx.lineTo(x1 + 60 * Math.cos(a), cy + 60 * Math.sin(a));
+              ctx.strokeStyle = "rgba(255,255,255,0.3)";
+              ctx.stroke();
+            }
+            break;
+          }
+          case "11-dong-dien": {
+            const U = p.U,
+              R = p.R,
+              I = U / R;
+            // Circuit
+            ctx.strokeStyle = "#fbbf24";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(80, 60, W - 160, H - 120);
+            ctx.fillStyle = "#ef4444";
+            ctx.fillRect(W / 2 - 15, 60, 30, 20);
+            ctx.fillStyle = "#fff";
+            ctx.font = "12px monospace";
+            ctx.fillText("R", W / 2 - 5, 75);
+            ctx.fillStyle = "#3b82f6";
+            ctx.beginPath();
+            ctx.arc(W / 2, H - 70, 15, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.fillText("U", W / 2 - 6, H - 65);
+            ctx.fillStyle = "#10b981";
+            ctx.beginPath();
+            ctx.arc(80, H / 2, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillText("I", 75, H / 2 + 4);
+            break;
+          }
+          case "12-vat-ly-nhiet": {
+            const T1 = p.T1,
+              T2 = p.T2,
+              Tf = (T1 + T2) / 2;
+            ctx.fillStyle = `rgb(${255 - T1 * 2.5}, ${T1 * 2.5}, 50)`;
+            ctx.fillRect(W / 4 - 40, cy - 40, 80, 80);
+            ctx.fillStyle = `rgb(${255 - T2 * 2.5}, ${T2 * 2.5}, 50)`;
+            ctx.fillRect((W * 3) / 4 - 40, cy - 40, 80, 80);
+            ctx.fillStyle = "#fff";
+            ctx.font = "14px monospace";
+            ctx.fillText(T1 + "°C", W / 4 - 18, cy + 5);
+            ctx.fillText(T2 + "°C", (W * 3) / 4 - 18, cy + 5);
+            // Arrow
+            if (time > 0.5) {
+              ctx.strokeStyle = "#fbbf24";
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.moveTo(W / 2 - 20, cy);
+              ctx.lineTo(W / 2 + 20, cy);
+              ctx.stroke();
+              ctx.fillText("Q →", W / 2 - 10, cy - 15);
+            }
+            break;
+          }
+          case "12-khi-ly-tuong": {
+            const V = p.V,
+              T = p.T;
+            const h = (V / 5) * (H - 100) + 50;
+            ctx.fillStyle = "rgba(59,130,246,0.2)";
+            ctx.fillRect(100, H - 50 - h, W - 200, h);
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(100, H - 50 - h, W - 200, 5); // Piston
+            // Particles
+            ctx.fillStyle = "#ec4899";
+            const n = Math.floor(T / 20);
+            for (let i = 0; i < n; i++) {
+              const px = 110 + Math.random() * (W - 220);
+              const py = H - 60 - h + Math.random() * h;
+              ctx.beginPath();
+              ctx.arc(px, py, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+            break;
+          }
+          case "12-tu-truong": {
+            const I = p.I,
+              r = p.r;
+            const B = (2e-7 * I) / (r / 100);
+            ctx.fillStyle = "#fbbf24";
+            ctx.beginPath();
+            ctx.arc(cx, cy, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.font = "10px monospace";
+            ctx.fillText("I⊗", cx - 10, cy + 4);
+            // Concentric circles
+            for (let i = 1; i <= 4; i++) {
+              ctx.beginPath();
+              ctx.arc(cx, cy, 20 + i * 15, 0, Math.PI * 2);
+              ctx.strokeStyle = `rgba(59,130,246, ${1 - i * 0.2})`;
+              ctx.stroke();
+            }
+            break;
+          }
+          case "12-vat-ly-hat-nhan": {
+            const N0 = p.N0,
+              T = p.T,
+              t_cur = time;
+            const N = N0 * Math.pow(0.5, t_cur / T);
+            // Decay graph
+            ctx.beginPath();
+            ctx.strokeStyle = "#10b981";
+            ctx.lineWidth = 2;
+            for (let x = 0; x < W - 40; x += 5) {
+              const val = N0 * Math.pow(0.5, ((x / (W - 40)) * 10) / T);
+              const y = H - 40 - (val / N0) * (H - 80);
+              x === 0 ? ctx.moveTo(x + 20, y) : ctx.lineTo(x + 20, y);
+            }
+            ctx.stroke();
+            // Current point
+            const curY = H - 40 - (N / N0) * (H - 80);
+            ctx.beginPath();
+            ctx.arc(W / 2, curY, 5, 0, Math.PI * 2);
+            ctx.fillStyle = "#ef4444";
+            ctx.fill();
+            ctx.fillStyle = "#fff";
+            ctx.fillText("N(t)", W / 2 + 15, curY - 5);
+            break;
+          }
+        }
+        ctx.restore();
+      }
+
+      function drawVec(ctx, x, y, vx, vy, color) {
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + vx, y + vy);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        const ang = Math.atan2(vy, vx);
+        ctx.beginPath();
+        ctx.moveTo(x + vx, y + vy);
+        ctx.lineTo(
+          x + vx - 6 * Math.cos(ang - 0.5),
+          y + vy - 6 * Math.sin(ang - 0.5),
+        );
+        ctx.lineTo(
+          x + vx - 6 * Math.cos(ang + 0.5),
+          y + vy - 6 * Math.sin(ang + 0.5),
+        );
+        ctx.closePath();
+        ctx.fillStyle = color;
+        ctx.fill();
+      }
+
+      renderTopics();
     </script>
   </body>
 </html>
